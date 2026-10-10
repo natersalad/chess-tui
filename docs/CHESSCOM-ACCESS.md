@@ -34,6 +34,16 @@ approved connection provider: account/game identity, sequence, stale-state guard
 
 The companion must leave login, consent and site controls visible and interactive. Its purpose is authentication and the approved board connection, not scraping. It must not reach into `game.getFEN`, `getLegalMoves`, `move`, cookies, private tokens or undocumented service endpoints. The exact companion stack and messages depend on the supplied integration instructions; no Electron dependency or speculative API implementation is introduced before that contract exists.
 
+### Preferred companion UX — design only
+
+Nathan's preferred future launch is `chess`: the terminal stays foreground while the application starts or reconnects its own companion browser process. **A running browser process and a visible browser window are different things.** The process may retain an authenticated page/session while its window is minimized or hidden, if Chess.com permits that operating mode. This is not a claim that a headless browser satisfies the required interactive WebView.
+
+The companion uses a persistent, dedicated application profile for Nathan's own login. It never reuses, reads or modifies his regular browser profile. Login, account choice, consent, site-required setup and any security challenge show a real interactive window. An explicit **Open browser** action makes that same companion visible. The approved arrangement must determine whether it can return to the background afterward; no silent login, consent or hidden matchmaking is proposed.
+
+An extension is not assumed necessary. The supplied SDK/protocol may replace the experimental extension entirely. Process ownership should use an app-specific instance/session identity, so cleanup cannot close Nathan's normal browser or unrelated pages. No browser infrastructure is implemented by this documentation change.
+
+Closing policy: when no live game is active, an orderly terminal exit stops the owned companion and connection while preserving its profile. During a live game, make the consequence explicit and let Nathan keep the companion visible or deliberately disconnect the app; disconnecting does not resign and may leave the server-side game and clocks running. A crash or terminal termination must not submit resignation, draw or any substitute move. Reconnection must reconcile approved server state rather than replay requests. These policies and the exact companion lifetime still need the official protocol's lifecycle requirements.
+
 Keep the existing App boundary (`snapshot`, `connected`, deliberate `command`, status updates), replacing the research transport with an approved provider. The provider will map documented events to owned game identity, turn, position, clocks, result and sequence. Submission must reconcile against authoritative state; an uncertain timeout is never replayed. Website account selection must not be guessed. Matchmaking, resign and draw remain separate deliberate actions only when permitted by the granted protocol. No bot, engine, evaluation or move suggestion may feed online play.
 
 Authentication design: use the approved native/companion flow and minimal granted scopes; use PKCE/state validation if supported/required by Chess.com. Store issued tokens privately outside Git, handle revocation, and never invent a client secret for a public desktop app. Loopback origin restrictions and the official WebSocket handshake replace any speculative assumptions about the old bridge token.
@@ -44,7 +54,8 @@ Authentication design: use the approved native/companion flow and minimal grante
 2. Which SDK/protocol and granted scopes permit human move submission, game-state/clock events and result updates? Which time controls/game types are allowed? Is rated play permitted?
 3. What exact WebView requirements, WebSocket origin/handshake, local address/port/TLS rules and client registration apply?
 4. Which native OAuth flow and exact redirects are supported? Does access require a confidential hosted service, or can it remain local-only?
-5. Is a test account/sandbox/bot game available? What compliance review/demo requirements apply? Are custom piece assets and local sound choices acceptable under the granted arrangement?
+5. May an app-owned, persistently authenticated interactive WebView remain hidden/minimized during ordinary terminal play and appear only for login, consent, required setup or an explicit Open browser action? Must it remain visible, and what lifecycle/reconnect behavior is required when the terminal closes? This is a request for a permitted interactive companion mode, not headless automation.
+6. Is a test account/sandbox/bot game available? What compliance review/demo requirements apply? Are custom piece assets and local sound choices acceptable under the granted arrangement?
 
 These are questions, not inferred permissions. A private repository and locally downloaded Chess.com sounds must not be presented as licensed/approved integration assets. The approval demo uses original vector pieces, Noctalia colors, and no audio.
 
