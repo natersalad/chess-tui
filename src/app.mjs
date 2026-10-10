@@ -1,6 +1,6 @@
 import {Chess} from 'chess.js';
 import {LocalGame,controls,practiceMove} from './game.mjs';
-import {squareAt} from './input.mjs';
+import {squareAt,squareCenter} from './input.mjs';
 import {render} from './render.mjs';
 import {loadTheme} from './theme.mjs';
 import {spawn} from 'node:child_process';
@@ -23,12 +23,12 @@ export class App {
  async input(e){
   if(e.type==='key'){const map={'quit':'force-exit','?':'help','f':'flip','a':'annotate','c':'clear','escape':'close'};if(map[e.key])return this.action(map[e.key]);return;}
   if(e.type!=='mouse'||e.wheel)return;
-  if(this.modal||this.screen==='menu'||!this.geometry){if(!e.motion&&!e.release&&e.button===0)this.clickButton(e);return;}
+  if(this.modal||this.screen==='menu'||!this.geometry){if(!e.motion&&!e.release&&e.button===0)return this.clickButton(e);return;}
   if(this.cancelledDrag){if(e.button===0&&e.release){this.cancelledReleased=true;return;}if(this.cancelledReleased&&e.button===0&&!e.motion&&!e.release){this.cancelledDrag=false;this.cancelledReleased=false;}else return;}
   const sq=squareAt(e.x,e.y,this.geometry,this.flip);
   if(this.pieceDrag&&e.button===2){this.cancelledDrag=true;this.cancelledReleased=false;this.pieceDrag=null;this.selected=null;this.drag=null;this.message='';this.changed();return;}
   if(this.pieceDrag&&e.motion&&e.button===0){const d=this.pieceDrag;d.moved ||= e.x!==d.startX||e.y!==d.startY;d.x=e.x;d.y=e.y;d.pixelX=e.pixelX;d.pixelY=e.pixelY;(this.dragChanged||this.changed)();return;}
-  if(this.pieceDrag&&e.release&&e.button===0){const d=this.pieceDrag;this.pieceDrag=null;if(!d.moved&&sq===d.from){this.changed();return;}const moves=sq?this.chess().moves({square:d.from,verbose:true}).filter(m=>m.to===sq):[];if(!moves.length){this.selected=null;this.message='Invalid drop';this.onInvalidDrop();this.changed();return;}if(moves.some(m=>m.promotion)){this.promotion={from:d.from,to:sq};this.modal='promotion';this.changed();return;}await this.move(d.from,sq);return;}
+  if(this.pieceDrag&&e.release&&e.button===0){const d=this.pieceDrag;this.pieceDrag=null;if(!d.moved&&sq===d.from){this.changed();return;}const moves=sq?this.chess().moves({square:d.from,verbose:true}).filter(m=>m.to===sq):[];if(!moves.length){this.selected=null;this.message='Invalid drop';this.onInvalidDrop();this.changed();return;}if(moves.some(m=>m.promotion)){this.promotion={from:d.from,to:sq};this.modal='promotion';this.changed();return;}await this.move(d.from,sq,'q',d);return;}
   if(!e.motion&&!e.release&&e.button===0)this.pieceDrag=null;
   const annotation=e.button===2||this.annotate;
   if(e.release&&this.drag){if(sq){if(this.drag.from===sq)this.toggleCircle(sq);else this.toggleArrow(this.drag.from,sq);}this.drag=null;this.changed();return;}
@@ -48,15 +48,23 @@ export class App {
    await this.move(this.selected,sq);
   }else this.changed();
  }
- clickButton(e){if(e.button!==0)return;const b=this.frameState?.buttons.find(b=>e.x>=b.x&&e.x<b.x+b.w&&e.y>=b.y&&e.y<b.y+b.h);if(b)void this.action(b.action);}
+ clickButton(e){if(e.button!==0)return;const b=this.frameState?.buttons.find(b=>e.x>=b.x&&e.x<b.x+b.w&&e.y>=b.y&&e.y<b.y+b.h);if(b)return this.action(b.action);}
  toggleCircle(s){this.circles=this.circles.includes(s)?this.circles.filter(x=>x!==s):[...this.circles,s];}
  toggleArrow(from,to){const a=this.arrows.find(a=>a.from===from&&a.to===to);this.arrows=a?this.arrows.filter(x=>x!==a):[...this.arrows,{from,to}];}
- async move(from,to,promotion='q'){
+ async animateMove(from,to,origin){
+  if(!this.geometry||!this.graphics||this.textFallback)return;
+  const g=this.geometry,start=origin?.moved?{x:origin.x,y:origin.y}:squareCenter(from,g,this.flip),end=squareCenter(to,g,this.flip),began=Date.now();
+  this.moveAnimation={from,moved:true,...start};this.changed();
+  while(!this.closed){const t=Math.min(1,(Date.now()-began)/110),ease=1-(1-t)**3;this.moveAnimation={from,moved:true,x:start.x+(end.x-start.x)*ease,y:start.y+(end.y-start.y)*ease};(this.dragChanged||this.changed)();if(t===1)break;await new Promise(r=>setTimeout(r,16));}
+  this.moveAnimation=null;
+ }
+ async move(from,to,promotion='q',origin){
   if(this.busy)return;this.busy=true;this.selected=null;this.arrows=[];this.circles=[];this.message='';this.changed();
+  await this.animateMove(from,to,origin);if(this.closed)return;
   if(this.mode==='online'){const r=await this.bridge.command('move',{from,to,promotion});this.message=r.ok?'Move submitted · waiting for website state':r.error;}
   else{const m=this.local.move(from,to,promotion);if(!m)this.message='Move could not be applied.';else{this.message=`${m.san}`;this.onMove();}}
   this.busy=false;this.changed();if(this.mode==='bot'&&this.local.chess.turn()==='b'&&!this.result()){
-   this.busy=true;this.message='Practice bot thinking…';this.changed();this.botTimer=setTimeout(()=>{if(this.mode==='bot'&&this.screen==='game'&&!this.result()){const m=practiceMove(this.local.chess);if(m&&this.local.move(m.from,m.to,m.promotion||'q'))this.onMove();this.message='Your move';}this.busy=false;this.changed();},350);
+   this.busy=true;this.message='Practice bot thinking…';this.changed();this.botTimer=setTimeout(async()=>{if(this.mode==='bot'&&this.screen==='game'&&!this.result()){const m=practiceMove(this.local.chess);if(m){await this.animateMove(m.from,m.to);if(!this.closed&&this.mode==='bot'&&this.screen==='game'&&this.local.move(m.from,m.to,m.promotion||'q'))this.onMove();}this.message='Your move';}this.busy=false;this.changed();},350);
   }
  }
  async action(a){
@@ -86,5 +94,5 @@ export class App {
  external(a){if(a==='copy'){const p=spawn('wl-copy',[],{stdio:['pipe','ignore','ignore']});p.on('error',()=>{this.message=`Copy unavailable. Token file: ${this.bridge.config.file}`;this.changed();});p.stdin.end(this.bridge.config.token);this.message='Pairing token copied locally.';}
   else{const p=spawn('xdg-open',[a==='browser'?'https://www.chess.com/play/online':path.join(projectRoot,'extension')],{stdio:'ignore',detached:true});p.on('error',()=>{});p.unref();this.message='Opened setup destination.';}}
  tick(){this.local?.tick();this.changed();}
- close(){clearTimeout(this.botTimer);}
+ close(){this.closed=true;this.moveAnimation=null;clearTimeout(this.botTimer);}
 }
