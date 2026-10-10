@@ -8,7 +8,7 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 export const projectRoot=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
 export class App {
- constructor(bridge,options={}){this.bridge=bridge;this.theme=loadTheme();this.mode=options.mode||'local';this.control=2;this.screen='menu';this.modal=null;this.selected=null;this.arrows=[];this.circles=[];this.flip=false;this.annotate=false;this.drag=null;this.message='Click a mode and time control to begin.';this.local=null;this.busy=false;this.onlineChess=new Chess();this.lastOnlineFen='';this.onlineLast=null;this.geometry=null;this.quit=options.quit||(()=>{});this.changed=options.changed||(()=>{});this.onExternal=options.onExternal||this.external.bind(this);}
+ constructor(bridge,options={}){this.bridge=bridge;this.graphics=options.graphics??true;this.textFallback=options.textFallback||false;this.cell={w:12,h:26};this.theme=loadTheme();this.mode=options.mode||'local';this.control=2;this.screen='menu';this.modal=null;this.selected=null;this.arrows=[];this.circles=[];this.flip=false;this.annotate=false;this.drag=null;this.message='Click a mode and time control to begin.';this.local=null;this.busy=false;this.onlineChess=new Chess();this.lastOnlineFen='';this.onlineLast=null;this.geometry=null;this.quit=options.quit||(()=>{});this.changed=options.changed||(()=>{});this.onExternal=options.onExternal||this.external.bind(this);}
  chess(){return this.mode==='online'?this.onlineChess:this.local?.chess||new Chess();}
  result(){return this.mode==='online'?this.bridge.snapshot?.result||'':this.local?.result||'';}
  lastMove(){return this.mode==='online'?this.onlineLast:this.local?.lastMove;}
@@ -24,11 +24,11 @@ export class App {
   if(this.modal||this.screen==='menu'||!this.geometry){if(!e.motion&&!e.release&&e.button===0)this.clickButton(e);return;}
   const sq=squareAt(e.x,e.y,this.geometry,this.flip);const annotation=e.button===2||this.annotate;
   if(e.release&&this.drag){if(sq){if(this.drag.from===sq)this.toggleCircle(sq);else this.toggleArrow(this.drag.from,sq);}this.drag=null;this.changed();return;}
-  if(e.motion&&this.drag){this.drag.to=sq;this.changed();return;}
+  if(e.motion&&this.drag){this.drag.to=sq;return;}
   if(e.motion||e.release)return;
   if(!sq){this.clickButton(e);return;}
-  if(annotation){this.drag={from:sq,to:sq};this.changed();return;}
-  if(e.button!==0||this.busy||this.result())return;
+  if(annotation){this.drag={from:sq,to:sq};return;}
+  if(e.button!==0)return;this.arrows=[];this.circles=[];if(this.busy||this.result()){this.changed();return;}
   const ch=this.chess(),p=ch.get(sq);
   if(this.selected===sq){this.selected=null;this.changed();return;}
   if(p&&p.color===ch.turn()){
@@ -39,7 +39,7 @@ export class App {
   if(this.selected){const moves=ch.moves({square:this.selected,verbose:true}).filter(m=>m.to===sq);if(!moves.length){this.message='Choose a highlighted destination.';this.changed();return;}
    if(moves.some(m=>m.promotion)){this.promotion={from:this.selected,to:sq};this.modal='promotion';this.changed();return;}
    await this.move(this.selected,sq);
-  }
+  }else this.changed();
  }
  clickButton(e){if(e.button!==0)return;const b=this.frameState?.buttons.find(b=>e.x>=b.x&&e.x<b.x+b.w&&e.y>=b.y&&e.y<b.y+b.h);if(b)void this.action(b.action);}
  toggleCircle(s){this.circles=this.circles.includes(s)?this.circles.filter(x=>x!==s):[...this.circles,s];}
@@ -58,7 +58,7 @@ export class App {
   else if(a.startsWith('control:'))this.control=Number(a.slice(8));
   else if(a==='start'){
    if(this.mode==='online'){if(this.bridge.snapshot?.active&&this.bridge.snapshot.color&&this.bridge.connected){this.onlineRequested=true;this.screen='game';this.sync();}else{this.busy=true;this.message='Reading browser game settings…';this.changed();const r=await this.bridge.command('prepare-game');this.busy=false;if(r.ok)this.modal='confirm';else this.message=r.error;}}
-   else{clearTimeout(this.botTimer);this.busy=false;this.local=new LocalGame(controls[this.control],this.mode);this.screen='game';this.selected=null;this.flip=false;this.arrows=[];this.circles=[];this.message='Click a piece, then its destination.';}
+   else{clearTimeout(this.botTimer);this.busy=false;this.local=new LocalGame(controls[this.control],this.mode);this.screen='game';this.selected=null;this.flip=false;this.arrows=[];this.circles=[];this.message='';}
   }else if(a==='yes:confirm'){this.modal=null;this.onlineRequested=true;this.busy=true;this.message='Requesting game…';this.changed();const r=await this.bridge.command('create-game',{base:controls[this.control].base,inc:controls[this.control].inc,expectedRated:this.bridge.snapshot?.ratedLabel});this.busy=false;this.message=r.ok?'Matchmaking requested · waiting for opponent':r.error;}
   else if(a==='close'){this.modal=null;this.promotion=null;}
   else if(['help','setup','theme','actions','resign','draw','exit'].includes(a))this.modal=a;

@@ -1,44 +1,32 @@
-# Run guide and verification — October 10, 2026
+# Run guide — graphical board and scoped cleanup
 
-Run **`chess`** from a terminal. A dedicated mouse-enabled Ghostty window opens without editing global settings. Choose **Two players** or **Practice bot**, a time control, then **Start local game**.
+Run **`chess`**. Choose a mode and time control in the mouse-controlled launch menu, then start. The in-game view contains only the graphical board, opponent clock above, user's clock below, and restrained turn/status text. No Mark/Flip/Clear/Help/Menu toolbar, verification heading, or move-instruction text is shown during play.
 
-- Left-click piece, then destination; promotion opens clickable choices.
-- Right-drag: arrow. Right-click: circle. Repeat to toggle off.
-- **Mark**: left-drag arrows / left-click circles as a right-click fallback.
-- **Clear**, **Flip**, **Help**, **Actions**, **Menu**, **Exit** are clickable.
-- Local draw/resign actions show confirmations. Online draw/resign goes through the owned-game guard; exiting or returning to menu does not resign.
-- **Help → Theme details** shows the palette source.
-- Ctrl+C is an optional emergency exit and restores terminal state.
+- Left-click a piece and then its destination. Every normal left-click on the board clears **all user arrows and red square marks**, including clicks on empty squares.
+- Hold the right mouse button, drag, and release over a different square to draw a broad translucent gold arrow. Nothing is previewed while holding/moving.
+- Right-click and release on the same square to toggle a translucent red square fill. Red derives from Noctalia's semantic error color, with a readable red fallback. There are no annotation circles; legal-move dots/capture hints remain separate.
+- Promotion choices remain clickable. Ctrl+C exits and restores terminal modes; the compositor can also close the window. Optional shortcuts remain, without a visible in-game toolbar.
 
-The installed launcher is `~/.local/bin/chess` → this checkout's `bin/chess.mjs`. To remove only the installed command, remove that symlink; the checkout remains intact. `npm run install:local` refuses to overwrite another command.
+The primary board is an original SVG/vector composition rasterized to PNG and displayed **inside Ghostty using Kitty graphics**, not ASCII, Unicode chess glyphs, or letter labels. Smooth centered white/dark pieces, inset edge coordinates, square geometry, highlights and large arrows follow Nathan's supplied reference while retaining Noctalia colors. `chess --text` is an explicit basic fallback; it is never silently substituted for the primary graphical board.
 
-Noctalia v5.2.1 uses `wallpaper m3-tonal-spot` here. The client reads `~/.cache/noctalia/reaper-palette.json`, checks its semantic roles and compares key colors with the generated Ghostty theme when available. It polls every 1.5 seconds, allowing atomic file replacement; transient invalid writes retain the last valid palette. It uses a contrast-corrected bundled fallback at initial failure. `CHESS_PALETTE=/path/to/palette.json` selects another semantic palette. The app changes no Noctalia settings, palette templates, terminal fonts, opacity, or wallpaper.
+Ghostty 1.3.1 returned `i=991;OK` to the live graphics probe and `6;26;12t` for 12×26-pixel cells. The app calculates physical square geometry and terminal mouse hitboxes from those cells. Missing image support is reported explicitly. Native titlebar/decorations and tab chrome are disabled **only in this dedicated app process** with Ghostty command-line options. The Niri compositor's thin focus border remains; no global terminal or desktop settings were changed.
 
-## Evidence
+Surrounding cells use the terminal's default background rather than an opaque RGB fill. Existing Ghostty opacity and blur are preserved. The board image itself remains opaque and readable. The app reads Noctalia's generated palette and refreshes validated color changes; dark-square derivation protects piece-outline contrast. No Noctalia configuration or palette template is written.
 
-**Implemented:** mouse-controlled menu/board/overlays, local rules, clocks, promotion, castling/en passant, game results, offline practice bot, annotations, resize handling, palette refresh/fallback, token-protected bridge, original extension/options, guarded website game creation/moves/actions, local command installation.
+## Rendering stability and verification
 
-**Runtime verified:** launched the installed app in Ghostty 1.3.1; menu and local board drawn from the current palette; Wayland virtual-pointer clicks started a five-minute game, played e4 and e5, selected a knight, and drew a right-drag arrow. Actual window screenshots appear below. This is desktop input/runtime evidence, not a claim that Nathan personally tested hardware mouse gestures.
+Text rendering now diffs individual cells; unchanged frames emit nothing, and clock changes touch only changed text. Arrow hold/motion does not redraw or rasterize. Board updates upload a complete PNG into the inactive Kitty image buffer, then place it and remove the prior image in a synchronized update. The visible board is not deleted while its replacement is being uploaded. Ratatui was considered; this scoped rendering fix did not require a framework/language rewrite.
 
-**Automated:** 22 meaningful tests passed at this stage, including headless Chromium running the real unpacked extension and exercising page → content → worker → authenticated WebSocket → terminal controller boundaries. Fixture matchmaking selects five minutes and clicks Play once only when the rated setting matches. A separate PTY integration check mouse-started a local game and confirmed clean exit restored termios and mouse/alternate-screen modes. Syntax/extension-asset checks pass; dependency audit reports no known vulnerabilities.
+Actual Ghostty verification used Wayland virtual-pointer events and compositor captures, not a human hardware test. Samples measured unchanged board pixels while the right button was held, no blank board frames after release, and clearing on left-click. This is sampled live-runtime evidence, not a guarantee about every GPU refresh. Exact measurements are in `runtime/stability.json`.
 
-**Read-only website inspection:** reached the logged-out Chess.com online play page, expanded its time-control menu, and observed the current preset buttons and Rated checkbox. Start Game was never clicked. These observations informed selectors; they do not verify login or matchmaking.
+32 tests pass, including clear on empty/occupied-square clicks, mark release semantics, red derivation/fallback, no preview/transmission while dragging, buffer ordering, sparse text updates, legal moves/promotion, clocks, and the unchanged browser bridge boundaries. Syntax and asset checks pass.
 
-**Not verified:** authenticated Chess.com account/game lifecycle, current real website selectors, background-tab behavior on a real match, website permission/compatibility for a live session, physical-user acceptance, and 256-color visual appearance. No rated games or messages were used as tests. Login and reviewed extension loading in Nathan's chosen browser remain setup steps.
+Authenticated Chess.com play remains unverified. Existing extension setup is described in README; no real rated games or player messages were used to test this cleanup. This update adds no account setup or unrelated features.
 
-Only one online bridge can bind the local port at a time; additional client windows still support local play and show the port error.
+## Actual screenshots
 
-The client requires a terminal with mouse reporting. It cannot override a terminal that suppresses mouse events; normal Ghostty launch supplies a reversible per-process option. Other terminal/multiplexer behavior is not established by the Ghostty test. The renderer uses ANSI/Unicode text, not Kitty graphics; the earlier PNG concepts remain only design references.
+![Clean graphical board and clocks](runtime/02-board.png)
+![Graphical selection](runtime/03-selection.png)
+![Release-committed gold arrow and red square mark](runtime/04-annotations.png)
 
-## Screenshots
-
-![Actual running menu](runtime/01-menu.png)
-![Actual initial local board](runtime/02-board.png)
-![Actual selected pawn](runtime/03-selection.png)
-![Actual moves, selection and user annotation](runtime/04-annotations.png)
-
-## Browser setup
-
-Follow README's five steps or run `chess --setup` for the extension path and pairing-file location. The pairing token is stored with mode 0600 in `~/.local/state/terminal-chess/bridge.json`; do not commit or share it. Click Copy token to avoid manual coordinate/text commands in the main UI. Chrome extension options accept pasted pairing text as a one-time setup field.
-
-The browser adapter supports narrowly identified controls and the site's observed `board.game` shape. Missing controls produce a visible error. Unknown rated/unrated state prevents terminal game creation; a paired transport alone does not mean live games are supported. A user can create a game manually in the browser and attach if ownership and board state are observed. Do not blindly retry after an uncertain action.
+The screenshots are actual running-app captures. The earlier ASCII board is retained as `runtime/before-ascii.png` for comparison only.

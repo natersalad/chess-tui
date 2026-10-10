@@ -2,7 +2,7 @@
 
 **Approved design reference · October 10, 2026 · Implementation resumed**
 
-The working first release is documented in [README](README.md) and [runtime verification](docs/RUN.md). This plan retains the original concept images and proposals; current implementation uses an ANSI/Unicode TUI rather than bitmap graphics. Authenticated online verification remains pending.
+The working first release is documented in [README](README.md) and [runtime verification](docs/RUN.md). This plan retains the original concept images and proposals; current implementation uses a graphical board inside Ghostty with minimal terminal clocks/status. The supplied reference and subsequent scoped cleanup supersede the earlier ASCII and toolbar proposals. Authenticated online verification remains pending.
 
 This plan describes a proposed product, not an implemented client. The images below are original design concepts, not screenshots of running software. They illustrate visual hierarchy and interaction states; exact terminal dimensions, rendering, and compatibility remain to be prototyped.
 

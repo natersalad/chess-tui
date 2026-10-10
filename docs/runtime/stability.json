@@ -1,0 +1,17 @@
+{
+  "board_bounds_physical": [
+    1244,
+    231,
+    2179,
+    1166
+  ],
+  "held_frames": 12,
+  "held_unchanged": true,
+  "release_frames": 24,
+  "minimum_board_palette_coverage": 0.8398158368840973,
+  "no_blank_board_frames": true,
+  "arrow_visible_after_release": true,
+  "empty_left_click_clears_all_annotations": true,
+  "red_mark_changes_board": true,
+  "occupied_click_changes_selection": true
+}

@@ -2,6 +2,9 @@
 export class InputParser {
  constructor(emit){this.emit=emit;this.buffer='';}
  feed(data){this.buffer+=data;while(this.buffer){
+  if(this.buffer.startsWith('\x1b_G')){const end=this.buffer.indexOf('\x1b\\',3);if(end<0)return;const report=this.buffer.slice(3,end);this.buffer=this.buffer.slice(end+2);this.emit({type:'graphics',report});continue;}
+  if(this.buffer==='\x1b_')return;
+  const cell=this.buffer.match(/^\x1b\[6;(\d+);(\d+)t/);if(cell){this.buffer=this.buffer.slice(cell[0].length);this.emit({type:'cell',h:+cell[1],w:+cell[2]});continue;}
   if(this.buffer.startsWith('\x1b[<')){
    const m=this.buffer.match(/^\x1b\[<(\d+);(\d+);(\d+)([Mm])/);
    if(!m){if(this.buffer.length>80)this.buffer='';return;}
