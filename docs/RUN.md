@@ -32,3 +32,5 @@ Authenticated Chess.com play remains unverified. Existing extension setup is des
 The screenshots are actual running-app captures. The earlier ASCII board is retained as `runtime/before-ascii.png` for comparison only.
 
 Knight-move annotations use a right-angle bend: the two-square leg first, then the one-square leg, in either board orientation. Other arrows remain straight.
+
+Hold the left mouse button on your piece and drag it across the board. Release to make a legal move. An invalid or off-board drop returns the piece to its original square and plays a short local error tone through `paplay`. Click-then-click movement still works. Promotion waits for your choice. Restart chess to load updates.
