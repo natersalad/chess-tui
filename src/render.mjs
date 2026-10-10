@@ -24,8 +24,8 @@ export function render(app,cols,rows){const t=app.theme,f=new Frame(cols,rows,t)
  }else{
   const g=app.textFallback?{x:Math.max(5,Math.floor((cols-(cols>=88?8:6)*8-20)/2)),y:7,sw:cols>=88?8:6,sh:rows>=44?4:3}:boardLayout(cols,rows,app.cell);const {sw,sh}=g;if(app.graphics||app.textFallback)app.geometry=g;
   const ch=app.chess();const online=app.mode==='online',snap=app.bridge.snapshot;const flip=app.flip;const top=flip?'w':'b',bottom=flip?'b':'w';const remaining=app.clocks();
-  f.text(g.x,4,`${online?(snap?.players?.[top]||'Opponent'):top==='w'?'WHITE':'BLACK'}  ${clock(remaining[top])}`,t.text);
-  f.text(g.x+sw*8-15,4,app.result()?'GAME OVER':`${online?'LIVE':controls[app.control].label}`,t.muted);
+  f.text(g.x,g.y-2,`${online?(snap?.players?.[top]||'Opponent'):top==='w'?'WHITE':'BLACK'}  ${clock(remaining[top])}`,t.text);
+  f.text(g.x+sw*8-15,g.y-2,app.result()?'GAME OVER':`${online?'LIVE':controls[app.control].label}`,t.muted);
   const selected=app.selected,legal=selected?ch.moves({square:selected,verbose:true}):[],last=app.lastMove();
   if(app.textFallback){for(let r=0;r<8;r++)for(let c=0;c<8;c++){
    const sq=String.fromCharCode(97+(flip?7-c:c))+(flip?r+1:8-r);const p=ch.get(sq),x=g.x+c*sw,y=g.y+r*sh;
@@ -42,8 +42,8 @@ export function render(app,cols,rows){const t=app.theme,f=new Frame(cols,rows,t)
   for(let c=0;c<8;c++)f.text(g.x+c*sw+Math.floor(sw/2),g.y+8*sh,String.fromCharCode(97+(flip?7-c:c)),t.muted);
   for(const a of [...app.arrows,...(app.drag?.to&&app.drag.to!==app.drag.from?[app.drag]:[])]){const p1=squareCenter(a.from,g,flip),p2=squareCenter(a.to,g,flip);f.line(p1.x,p1.y,p2.x,p2.y,t.tertiary);}
   }else if(!app.graphics){f.text(g.x,10,'Graphical board requires Kitty image support.',t.accent);f.text(g.x,12,'Use chess in the dedicated Ghostty session.',t.muted);}
-  const by=Math.ceil(g.y+sh*8+2);f.text(g.x,by,`${online?(snap?.players?.[bottom]||'You'):bottom==='w'?'WHITE':'BLACK'}  ${clock(remaining[bottom])}   ${app.result()||`${ch.turn()==='w'?'White':'Black'} to move${ch.isCheck()?' · CHECK':''}`}`.slice(0,cols-8),t.accent);
-  if(app.message&&!/^Click a piece|^Your move|^Choose a highlighted/.test(app.message))f.text(g.x,by+2,app.message.slice(0,cols-8),t.muted);
+  const by=Math.ceil(g.y+sh*8+1);f.text(g.x,by,`${online?(snap?.players?.[bottom]||'You'):bottom==='w'?'WHITE':'BLACK'}  ${clock(remaining[bottom])}   ${app.result()||`${ch.turn()==='w'?'White':'Black'} to move${ch.isCheck()?' · CHECK':''}`}`.slice(0,cols-8),t.accent);
+  if(app.message&&!/^Click a piece|^Your move|^Choose a highlighted/.test(app.message))f.text(g.x,by+1,app.message.slice(0,cols-8),t.muted);
 
  }
  if(app.modal)modal(f,app);

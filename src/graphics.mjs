@@ -6,9 +6,9 @@ export const deleteBoard=`\x1b_Ga=d,d=I,i=${imageId},q=2\x1b\\`;
 export const graphicsQuery='\x1b_Ga=q,i=991,s=1,v=1,f=24;AAAA\x1b\\';
 const mix=(a,b,n)=>'#'+rgb(a).map((v,i)=>Math.round(v*(1-n)+rgb(b)[i]*n).toString(16).padStart(2,'0')).join('');
 export function boardLayout(cols,rows,cell={w:12,h:26}){
- const available=Math.min((cols-10)*cell.w,(rows-12)*cell.h),gcd=(a,b)=>b?gcd(b,a%b):a,lcm=cell.w*cell.h/gcd(cell.w,cell.h);
- let size=Math.floor(available/lcm)*lcm;if(size<available*.6)size=Math.floor(available/cell.w)*cell.w;
- const width=size/cell.w,height=size/cell.h,x=Math.max(3,Math.floor((cols-width)/2)+1),y=6;
+ const available=Math.min((cols-4)*cell.w,(rows-6)*cell.h);
+ const size=Math.floor(available/cell.w)*cell.w;
+ const width=size/cell.w,height=size/cell.h,x=Math.max(2,Math.floor((cols-width)/2)+1),y=3;
  return {x,y,sw:width/8,sh:height/8,cols:width,rows:Math.ceil(height),size,cell};
 }
 export function annotationRed(t){return /^#[0-9a-f]{6}$/i.test(t.error||'')?mix(t.error,'#b00000',.6):'#ef5350';}
