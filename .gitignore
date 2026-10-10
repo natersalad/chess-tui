@@ -1,0 +1,22 @@
+# Private scratch work and local runtime state
+work/
+.env
+.env.*
+!.env.example
+credentials*.json
+browser-profile*/
+profiles/
+*.log
+
+# Build/dependency output (framework not yet selected)
+node_modules/
+dist/
+build/
+target/
+__pycache__/
+.venv/
+
+# Editor/OS files
+.DS_Store
+*.swp
+*.swo
