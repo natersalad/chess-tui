@@ -11,7 +11,7 @@ npm run install:local
 chess
 ```
 
-`chess` is already installed at `~/.local/bin/chess` on this machine. Normal launch runs inside the terminal where you type it and returns to that shell when you exit. `chess --here` remains an alias for this default. The current terminal must permit mouse reporting; this machine’s Ghostty configuration currently disables it. `chess --window` optionally opens a separate mouse-enabled Ghostty session without changing global settings. Node.js 22+ is required. Minimum size: 72 columns × 36 rows. Ghostty with truecolor is the tested target.
+`chess` is already installed at `~/.local/bin/chess` on this machine. Normal launch runs inside the terminal where you type it and returns to that shell when you exit. `chess --here` remains an alias for this default. The current terminal must permit mouse reporting; this machine’s Ghostty configuration now enables it, with Nathan’s approval. `chess --window` optionally opens a separate mouse-enabled Ghostty session without changing global settings. Node.js 22+ is required. Minimum size: 72 columns × 36 rows. Ghostty with truecolor is the tested target.
 
 Click a mode, choose 1, 3, 5, 10, or 15+10, then start. Click a piece and destination. Right-drag and release draws an arrow; same-square right-click/release marks a square red. Normal left-click clears all annotations. There is no drag preview or in-game toolbar. The launch menu and promotion choices remain mouse-controlled. Keyboard shortcuts are optional; move coordinates are never required.
 
