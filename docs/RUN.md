@@ -61,8 +61,8 @@ The graphical board now uses nearly all available terminal height or width, with
 
 The board reserves ten terminal rows vertically instead of six, starts at row five instead of three, and reserves only two columns horizontally instead of four. The clocks remain above and below the board.
 
-On Niri, chess fits only the Ghostty window proven to own its process to a narrower width once at launch. It restores the previous width on exit if you have not resized it yourself. It leaves other windows and desktop configuration alone. Resizing during play remains under your control; a wide window naturally has extra side space around a square board.
+Chess never changes your window size. It preserves the original terminal dimensions and manual resizing. Explicit side margins are minimal; remaining side space comes from keeping a square board within a wide terminal. No global configuration changes are made.
 
-Live Ghostty verification used a 95×51 terminal and a 90-column board after fitting, compared with the original 142-column window. The displayed board measured 1068×1069 compositor pixels (one-pixel rounding). Mouse-generated e2–e4, a right-release arrow, a red square mark and left-click clearing all succeeded. Core/graphics checks and syntax checks pass.
+The current live Ghostty screenshot uses the original 142×51 terminal and 1362×1096 logical window size. The board occupies 90 columns; no narrowing or width restoration occurs. The 35 existing core/graphics checks verify legal mouse movement, both orientations, square aspect ratio, annotation release/clearing and pixel hitboxes. Syntax checks pass. The screenshot verifies runtime layout; this correction does not claim a new physical mouse test.
 
-![Updated spacing in the composited terminal](runtime/05-spacing.png)
+![Original window dimensions with revised padding](runtime/05-spacing.png)

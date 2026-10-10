@@ -1,14 +1,8 @@
 {
-  "terminal_cols": 95,
+  "terminal_cols": 142,
   "terminal_rows": 51,
-  "board_bounds": [
-    1752,
-    167,
-    2820,
-    1236
-  ],
   "geometry": {
-    "x": 3,
+    "x": 27,
     "y": 5,
     "sw": 11.25,
     "sh": 5.089285714285714,
@@ -20,12 +14,10 @@
       "h": 42
     }
   },
-  "legal_click_move": true,
-  "arrow_release": true,
-  "red_mark": true,
-  "left_click_clears": true,
+  "window_size_unchanged": true,
   "window_logical_size": [
-    909,
+    1362,
     1096
-  ]
+  ],
+  "note": "Runtime layout captured; mouse geometry verified with existing core/graphics tests."
 }

@@ -67,4 +67,4 @@ Right-click while holding a piece cancels the drag and restores its original squ
 
 Successful graphical moves use a quick 110 ms eased glide into the destination square, including click-to-move, drag placement and practice-bot moves. The held sprite stays cached during the glide; invalid drops and right-click cancellation remain immediate.
 
-Chess uses slim side margins and more vertical breathing room. On Niri it fits its own terminal width once, restoring the previous width on exit unless you resize it. Global desktop settings stay unchanged.
+Chess uses slim explicit side margins and more vertical breathing room. It preserves your existing terminal dimensions and manual resizing. A square board in a wide window naturally leaves extra side space.
