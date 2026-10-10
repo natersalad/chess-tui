@@ -7,14 +7,16 @@ import {spawn} from 'node:child_process';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 export const projectRoot=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
+const playSound=name=>{const p=spawn('paplay',[path.join(projectRoot,'assets',name)],{stdio:'ignore'});p.on('error',()=>{});};
 export class App {
- constructor(bridge,options={}){this.bridge=bridge;this.graphics=options.graphics??true;this.textFallback=options.textFallback||false;this.cell={w:12,h:26};this.theme=loadTheme();this.mode=options.mode||'local';this.control=2;this.screen='menu';this.modal=null;this.selected=null;this.arrows=[];this.circles=[];this.flip=false;this.annotate=false;this.drag=null;this.pieceDrag=null;this.onInvalidDrop=options.onInvalidDrop||(()=>{const p=spawn('paplay',[path.join(projectRoot,'assets/invalid-drop.wav')],{stdio:'ignore'});p.on('error',()=>{});});this.message='Click a mode and time control to begin.';this.local=null;this.busy=false;this.onlineChess=new Chess();this.lastOnlineFen='';this.onlineLast=null;this.geometry=null;this.quit=options.quit||(()=>{});this.changed=options.changed||(()=>{});this.onExternal=options.onExternal||this.external.bind(this);}
+ constructor(bridge,options={}){this.bridge=bridge;this.graphics=options.graphics??true;this.textFallback=options.textFallback||false;this.cell={w:12,h:26};this.theme=loadTheme();this.mode=options.mode||'local';this.control=2;this.screen='menu';this.modal=null;this.selected=null;this.arrows=[];this.circles=[];this.flip=false;this.annotate=false;this.drag=null;this.pieceDrag=null;this.onInvalidDrop=options.onInvalidDrop||(()=>playSound('invalid-drop.wav'));this.onMove=options.onMove||(()=>playSound('piece-place.wav'));this.message='Click a mode and time control to begin.';this.local=null;this.busy=false;this.onlineChess=new Chess();this.lastOnlineFen='';this.onlineLast=null;this.geometry=null;this.quit=options.quit||(()=>{});this.changed=options.changed||(()=>{});this.onExternal=options.onExternal||this.external.bind(this);}
  chess(){return this.mode==='online'?this.onlineChess:this.local?.chess||new Chess();}
  result(){return this.mode==='online'?this.bridge.snapshot?.result||'':this.local?.result||'';}
  lastMove(){return this.mode==='online'?this.onlineLast:this.local?.lastMove;}
  clocks(){if(this.mode!=='online')return this.local?.remaining||{w:null,b:null};const s=this.bridge.snapshot;if(!s)return {w:null,b:null};const c={...s.clocks};if(s.active&&!s.result){const side=this.onlineChess.turn();if(c[side]!==null)c[side]=Math.max(0,c[side]-Math.min(Date.now()-s.receivedAt,this.bridge.connected?86400000:6000));}return c;}
  sync(){const s=this.bridge.snapshot;if(s&&s.fen!==this.lastOnlineFen){
   const old=this.onlineChess;this.onlineLast=null;for(const m of old.moves({verbose:true})){old.move(m);if(old.fen()===new Chess(s.fen).fen())this.onlineLast=m;old.undo();if(this.onlineLast)break;}
+  if(this.mode==='online'&&this.screen==='game'&&this.lastOnlineFen&&this.onlineLast)this.onMove();
   this.onlineChess=new Chess(s.fen);this.lastOnlineFen=s.fen;this.selected=null;this.pieceDrag=null;this.arrows=[];this.circles=[];
  }if(this.mode==='online'&&s?.active&&s.color&&this.onlineRequested){this.screen='game';this.flip=s.orientation==='b';this.message=this.bridge.status;}this.changed();}
  frame(cols,rows){this.geometry=null;this.frameState=render(this,cols,rows);return this.frameState;}
@@ -23,6 +25,7 @@ export class App {
   if(e.type!=='mouse'||e.wheel)return;
   if(this.modal||this.screen==='menu'||!this.geometry){if(!e.motion&&!e.release&&e.button===0)this.clickButton(e);return;}
   const sq=squareAt(e.x,e.y,this.geometry,this.flip);
+  if(this.pieceDrag&&e.button===2&&!e.motion&&!e.release){this.pieceDrag=null;this.selected=null;this.drag=null;this.message='';this.changed();return;}
   if(this.pieceDrag&&e.motion&&e.button===0){const d=this.pieceDrag;d.moved ||= e.x!==d.startX||e.y!==d.startY;d.x=e.x;d.y=e.y;d.pixelX=e.pixelX;d.pixelY=e.pixelY;(this.dragChanged||this.changed)();return;}
   if(this.pieceDrag&&e.release&&e.button===0){const d=this.pieceDrag;this.pieceDrag=null;if(!d.moved&&sq===d.from){this.changed();return;}const moves=sq?this.chess().moves({square:d.from,verbose:true}).filter(m=>m.to===sq):[];if(!moves.length){this.selected=null;this.message='Invalid drop';this.onInvalidDrop();this.changed();return;}if(moves.some(m=>m.promotion)){this.promotion={from:d.from,to:sq};this.modal='promotion';this.changed();return;}await this.move(d.from,sq);return;}
   if(!e.motion&&!e.release&&e.button===0)this.pieceDrag=null;
@@ -50,9 +53,9 @@ export class App {
  async move(from,to,promotion='q'){
   if(this.busy)return;this.busy=true;this.selected=null;this.arrows=[];this.circles=[];this.message='';this.changed();
   if(this.mode==='online'){const r=await this.bridge.command('move',{from,to,promotion});this.message=r.ok?'Move submitted · waiting for website state':r.error;}
-  else{const m=this.local.move(from,to,promotion);if(!m)this.message='Move could not be applied.';else this.message=`${m.san}`;}
+  else{const m=this.local.move(from,to,promotion);if(!m)this.message='Move could not be applied.';else{this.message=`${m.san}`;this.onMove();}}
   this.busy=false;this.changed();if(this.mode==='bot'&&this.local.chess.turn()==='b'&&!this.result()){
-   this.busy=true;this.message='Practice bot thinking…';this.changed();this.botTimer=setTimeout(()=>{if(this.mode==='bot'&&this.screen==='game'&&!this.result()){const m=practiceMove(this.local.chess);if(m)this.local.move(m.from,m.to,m.promotion||'q');this.message='Your move';}this.busy=false;this.changed();},350);
+   this.busy=true;this.message='Practice bot thinking…';this.changed();this.botTimer=setTimeout(()=>{if(this.mode==='bot'&&this.screen==='game'&&!this.result()){const m=practiceMove(this.local.chess);if(m&&this.local.move(m.from,m.to,m.promotion||'q'))this.onMove();this.message='Your move';}this.busy=false;this.changed();},350);
   }
  }
  async action(a){
