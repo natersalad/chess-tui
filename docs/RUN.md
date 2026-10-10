@@ -1,6 +1,6 @@
 # Run guide — graphical board and scoped cleanup
 
-Run **`chess`**. Choose a mode and time control in the mouse-controlled launch menu, then start. The in-game view contains only the graphical board, opponent clock above, user's clock below, and restrained turn/status text. No Mark/Flip/Clear/Help/Menu toolbar, verification heading, or move-instruction text is shown during play.
+Run **`chess`** in your current terminal. It uses that terminal and returns to your shell on exit; no extra window opens. `chess --window` explicitly requests the separate mouse-enabled Ghostty window. Mouse input requires the existing terminal to allow mouse reporting; this machine’s current Ghostty setting disables it. Choose a mode and time control in the mouse-controlled launch menu, then start. The in-game view contains only the graphical board, opponent clock above, user's clock below, and restrained turn/status text. No Mark/Flip/Clear/Help/Menu toolbar, verification heading, or move-instruction text is shown during play.
 
 - Left-click a piece and then its destination. Every normal left-click on the board clears **all user arrows and red square marks**, including clicks on empty squares.
 - Hold the right mouse button, drag, and release over a different square to draw a broad translucent gold arrow. Nothing is previewed while holding/moving.
@@ -9,7 +9,7 @@ Run **`chess`**. Choose a mode and time control in the mouse-controlled launch m
 
 The primary board is an original SVG/vector composition rasterized to PNG and displayed **inside Ghostty using Kitty graphics**, not ASCII, Unicode chess glyphs, or letter labels. Smooth centered white/dark pieces, inset edge coordinates, square geometry, highlights and large arrows follow Nathan's supplied reference while retaining Noctalia colors. `chess --text` is an explicit basic fallback; it is never silently substituted for the primary graphical board.
 
-Ghostty 1.3.1 returned `i=991;OK` to the live graphics probe and `6;26;12t` for 12×26-pixel cells. The app calculates physical square geometry and terminal mouse hitboxes from those cells. Missing image support is reported explicitly. Native titlebar/decorations and tab chrome are disabled **only in this dedicated app process** with Ghostty command-line options. The Niri compositor's thin focus border remains; no global terminal or desktop settings were changed.
+Ghostty 1.3.1 returned `i=991;OK` to the live graphics probe and `6;26;12t` for 12×26-pixel cells. The app calculates physical square geometry and terminal mouse hitboxes from those cells. Missing image support is reported explicitly. Native titlebar/decorations and tab chrome are disabled **only when using the optional dedicated `--window` app process** with Ghostty command-line options. The Niri compositor's thin focus border remains; no global terminal or desktop settings were changed.
 
 Surrounding cells use the terminal's default background rather than an opaque RGB fill. Existing Ghostty opacity and blur are preserved. The board image itself remains opaque and readable. The app reads Noctalia's generated palette and refreshes validated color changes; dark-square derivation protects piece-outline contrast. No Noctalia configuration or palette template is written.
 

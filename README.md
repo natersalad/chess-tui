@@ -11,7 +11,7 @@ npm run install:local
 chess
 ```
 
-`chess` is already installed at `~/.local/bin/chess` on this machine. Normal launch opens a dedicated Ghostty session with `--mouse-reporting=true`; the global setting remains unchanged. Use `chess --here` only in a terminal that already permits mouse reporting. Node.js 22+ is required. Minimum size: 72 columns × 36 rows. Ghostty with truecolor is the tested target.
+`chess` is already installed at `~/.local/bin/chess` on this machine. Normal launch runs inside the terminal where you type it and returns to that shell when you exit. `chess --here` remains an alias for this default. The current terminal must permit mouse reporting; this machine’s Ghostty configuration currently disables it. `chess --window` optionally opens a separate mouse-enabled Ghostty session without changing global settings. Node.js 22+ is required. Minimum size: 72 columns × 36 rows. Ghostty with truecolor is the tested target.
 
 Click a mode, choose 1, 3, 5, 10, or 15+10, then start. Click a piece and destination. Right-drag and release draws an arrow; same-square right-click/release marks a square red. Normal left-click clears all annotations. There is no drag preview or in-game toolbar. The launch menu and promotion choices remain mouse-controlled. Keyboard shortcuts are optional; move coordinates are never required.
 
@@ -24,7 +24,7 @@ These are screenshots of the running application in Ghostty, captured through th
 
 The primary board uses original, centered outlined vector pieces rasterized to PNG through Ghostty's Kitty graphics protocol. No ASCII or piece letters appear in this renderer. Coordinates sit inside the board edges; arrows are broad, translucent gold and square marks are translucent Noctalia-derived red. Normal terminal transparency surrounds the board. Clock-only text updates are sparse, and board changes use a completed inactive image buffer before swapping, rather than clearing the visible image. `chess --text` is an explicit basic fallback.
 
-The dedicated launcher disables titlebar/tab chrome with per-process options and preserves global Ghostty/Noctalia configuration. See the run guide for actual stability samples and limits.
+The optional `--window` launcher disables titlebar/tab chrome with per-process options and preserves global Ghostty/Noctalia configuration. See the run guide for actual stability samples and limits.
 
 ## Chess.com setup and limits
 
