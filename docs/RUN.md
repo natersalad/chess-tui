@@ -34,3 +34,5 @@ The screenshots are actual running-app captures. The earlier ASCII board is reta
 Knight-move annotations use a right-angle bend: the two-square leg first, then the one-square leg, in either board orientation. Other arrows remain straight.
 
 Hold the left mouse button on your piece and drag it across the board. Release to make a legal move. An invalid or off-board drop returns the piece to its original square and plays a short local error tone through `paplay`. Click-then-click movement still works. Promotion waits for your choice. Restart chess to load updates.
+
+The pointer becomes an open hand over a movable piece and a closed hand while the left button holds it. Ghostty cursor shapes use [OSC 22](https://ghostty.org/docs/vt/osc/22); the app restores the terminal cursor on exit. Hovering alone never moves a piece.
