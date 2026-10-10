@@ -1,3 +1,7 @@
+# Production status
+
+Production uses `PendingApprovalConnection` and sends no live operations. The implementation below is archived fixture research, not an approved Chess.com integration. See [supported access design](CHESSCOM-ACCESS.md).
+
 # Bridge boundaries
 
 The server binds only `127.0.0.1:17391`, requires a random 256-bit pairing secret, rejects unexpected browser origins, limits payloads to 16 KiB, and validates snapshots. The original extension has storage permission, a Chess.com host scope, and the local loopback host scope. It neither downloads scripts nor accepts arbitrary code to execute.

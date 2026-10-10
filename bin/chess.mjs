@@ -4,7 +4,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
-import {Bridge,bridgeConfig} from '../src/bridge.mjs';
+import {PendingApprovalConnection,approvalForm} from '../src/connection.mjs';
 import {App} from '../src/app.mjs';
 import {InputParser,pixelMouseEvent} from '../src/input.mjs';
 import {watchTheme,loadTheme} from '../src/theme.mjs';
@@ -13,14 +13,14 @@ import {pointerShape,pointerSequence} from '../src/pointer.mjs';
 import {BoardPainter,graphicsQuery} from '../src/graphics.mjs';
 const newWindow=process.argv.includes('--window')&&!process.argv.includes('--here');
 if(process.argv.includes('--help')){console.log('chess — mouse-driven terminal chess\n  --here       use current terminal (the default)\n  --window     open a separate mouse-enabled Ghostty window\n  --text       explicit basic text fallback\n  --doctor     report local capabilities\n  --setup      print reviewed browser extension setup\n  --local      start in local mode (default)\n  --online     start in Chess.com mode\nNormal launch runs in the current terminal.');process.exit(0);}
-if(process.argv.includes('--doctor')){console.log(JSON.stringify({node:process.version,theme:loadTheme().source,term:process.env.TERM,mouseReporting:'Current terminal must permit mouse reporting; --window provides a per-session override',online:'Requires reviewed extension and logged-in Chess.com tab; unofficial integration'},null,2));process.exit(0);}
-if(process.argv.includes('--setup')){const c=bridgeConfig();console.log(`Extension: ${path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../extension')}\nPairing token file: ${c.file}\nLoad unpacked in Chromium, open extension options, copy token from file.\nThen log in to Chess.com and keep /play/online open. Run chess and click Browser setup for copy/open controls.\nNo rated games are started by setup.`);process.exit(0);}
+if(process.argv.includes('--doctor')){console.log(JSON.stringify({node:process.version,theme:loadTheme().source,term:process.env.TERM,mouseReporting:'Current terminal must permit mouse reporting; --window provides a per-session override',online:'Approval required; no production live-play transport configured'},null,2));process.exit(0);}
+if(process.argv.includes('--setup')){console.log(`Chess.com live play requires approved Connected Board access.\nApplication: ${approvalForm}\nReview docs/CHESSCOM-ACCESS.md and docs/CHESSCOM-APPLICATION.md.\nThe former page-method extension is archived for fixture research, not supported live play.`);process.exit(0);}
 // Per-process override only. No writes to Ghostty/Noctalia configuration.
 if(newWindow&&(process.env.WAYLAND_DISPLAY||process.env.DISPLAY)){
  const p=spawn('ghostty',['--gtk-single-instance=false','--mouse-reporting=true','--title=Chess','--window-decoration=none','--gtk-titlebar=false','--window-show-tab-bar=never','-e',process.execPath,fileURLToPath(import.meta.url),'--here',...process.argv.slice(2).filter(a=>a!=='--window')],{stdio:'ignore',detached:true});p.on('error',()=>{console.error('Could not open Ghostty. Run chess --here in a mouse-enabled terminal.');process.exitCode=1;});p.unref();
 }else{
  if(!process.stdin.isTTY||!process.stdout.isTTY){console.error('chess needs an interactive terminal. Use chess --doctor for diagnostics.');process.exit(1);}
- const config=bridgeConfig(),bridge=new Bridge(config);let bridgeError='';try{await bridge.start();}catch(e){bridge.status=`Online bridge unavailable (${e.code||e.message}); local play works.`;bridgeError=bridge.status;}
+ const bridge=new PendingApprovalConnection();let bridgeError='';try{await bridge.start();}catch(e){bridge.status=`Online bridge unavailable (${e.code||e.message}); local play works.`;bridgeError=bridge.status;}
  let stopped=false,timer,escapeTimer,probeTimer,unwatch,unwatchButtons;const app=new App(bridge,{graphics:false,textFallback:process.argv.includes('--text'),mode:process.argv.includes('--online')?'online':'local',quit:()=>void cleanup()});
  const painter=new BoardPainter(s=>{if(!stopped)process.stdout.write(s);});let pixelMouse=false;let previousFrame=null,mouse=null,cursor='';const updatePointer=()=>{const next=pointerShape(app,mouse);if(next!==cursor){process.stdout.write(pointerSequence(next));cursor=next;}};let painting=false;const draw=()=>{if(stopped||painting)return;painting=true;const cols=process.stdout.columns||80,rows=process.stdout.rows||40;const frame=app.frame(cols,rows);process.stdout.write(frame.output(previousFrame));previousFrame=frame;updatePointer();if(app.screen==='game'&&!app.modal&&app.geometry&&app.graphics&&!app.textFallback){void painter.paint(app,app.geometry).catch(e=>{app.graphics=false;app.message='Image rendering failed: '+e.message;painter.hide();});}else painter.hide();painting=false;};
  app.changed=draw;app.dragChanged=()=>{if(!stopped&&app.geometry){void painter.paint(app,app.geometry).catch(()=>{});updatePointer();}};bridge.changed=()=>{app.sync();draw();};

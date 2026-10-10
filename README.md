@@ -26,21 +26,11 @@ The primary board uses original, centered outlined vector pieces rasterized to P
 
 The optional `--window` launcher disables titlebar/tab chrome with per-process options and preserves global Ghostty/Noctalia configuration. See the run guide for actual stability samples and limits.
 
-## Chess.com setup and limits
+## Chess.com supported access
 
-The bridge is implemented and verified with a **real unpacked extension against controlled website fixtures**. Authenticated Chess.com game creation and live play are **not verified**. Website controls/API shapes may differ. The adapter deliberately stops on missing, ambiguous, stale or unknown controls instead of guessing.
+**Live play is not connected.** Production now uses an approval-required provider and does not start the undocumented page-method bridge. The public API cannot submit moves. Review [supported integration design](docs/CHESSCOM-ACCESS.md) and [application packet](docs/CHESSCOM-APPLICATION.md). The official request form requires an interactive WebView plus a WebSocket server for the connected-board route; this terminal has no embedded browser yet, and software-only eligibility is unconfirmed.
 
-1. Run `chess`, click **Browser setup → Open extension**.
-2. In a Chromium browser, open its Extensions page, enable developer mode, and **Load unpacked** using this project's `extension/` folder. This is the original reviewed extension in this repository, not an installed upstream extension.
-3. Open **Terminal Chess Bridge** extension options. Click **Copy token** in the TUI, paste into options, and click **Pair**.
-4. Log in to Chess.com yourself and open `/play/online`. Click the extension toolbar icon on that tab to bind it.
-5. In the TUI, choose **Chess.com**. An owned active game can be attached; otherwise choose a preset. The bridge opens the time-control menu to read Rated/Unrated before showing your confirmation. Creation requires an observed rated/unrated setting, verifies it again, selects the preset, then invokes Play once.
-
-If the website uses unsupported selectors or does not expose a verifiable rated setting, terminal matchmaking stops before Play. Open the browser for setup/manual game creation, then attach from the TUI. No real games were started or player messages sent during verification. The public Chess.com data API is not treated as a live-play API.
-
-No browser credentials leave the browser. Pairing is local, token-protected, and loopback-only. No engine advice is available in online mode. The practice bot is deliberately weak, local-only, and not Stockfish.
-
-See [run guide and verification](docs/RUN.md), [security boundaries](docs/SECURITY.md), and [the illustrated design plan](PLAN.md).
+`chess --setup` prints the supported request route. The original extension and bridge remain fixture-only research files; do not use them as a supported live-play setup. Local play, original graphics, Noctalia colors, mouse controls and window dimensions remain unchanged. No engine advice is available online. No application, account consent or real game action has been submitted.
 
 ## Development
 

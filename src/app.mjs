@@ -4,6 +4,7 @@ import {squareAt,squareCenter} from './input.mjs';
 import {render} from './render.mjs';
 import {loadTheme} from './theme.mjs';
 import {spawn} from 'node:child_process';
+import {approvalForm,approvalHelp} from './connection.mjs';
 import path from 'node:path';
 import fs from 'node:fs';
 import {fileURLToPath} from 'node:url';
@@ -94,7 +95,7 @@ export class App {
   this.changed();
  }
  external(a){if(a==='copy'){const p=spawn('wl-copy',[],{stdio:['pipe','ignore','ignore']});p.on('error',()=>{this.message=`Copy unavailable. Token file: ${this.bridge.config.file}`;this.changed();});p.stdin.end(this.bridge.config.token);this.message='Pairing token copied locally.';}
-  else{const p=spawn('xdg-open',[a==='browser'?'https://www.chess.com/play/online':path.join(projectRoot,'extension')],{stdio:'ignore',detached:true});p.on('error',()=>{});p.unref();this.message='Opened setup destination.';}}
+  else{const target=this.bridge.pendingApproval?(a==='browser'?approvalForm:approvalHelp):(a==='browser'?'https://www.chess.com/play/online':path.join(projectRoot,'extension'));const p=spawn('xdg-open',[target],{stdio:'ignore',detached:true});p.on('error',()=>{});p.unref();this.message='Opened setup destination.';}}
  tick(){this.local?.tick();this.changed();}
  close(){this.closed=true;this.moveAnimation=null;clearTimeout(this.botTimer);}
 }
