@@ -50,3 +50,5 @@ Successful graphical moves use a quick 110 ms eased glide into the destination s
 Move-animation handoffs now prepare both images before changing the visible scene and swap the board and held sprite in one synchronized frame. Sprite removal on landing or cancellation occurs with the replacement board, closing the previous visibility gaps.
 
 Sounds distinguish ordinary placement, capture, check, checkmate and a drawn ending. One sound plays per confirmed move, with game ending/check taking priority over capture; illegal drops retain the error sound.
+
+Move and event sounds now use a CC0 recording of a real chess piece on a wooden board, arranged into distinct natural clack rhythms. Source and processing are documented in `assets/ATTRIBUTION.md`. The invalid-drop error cue remains separate.
