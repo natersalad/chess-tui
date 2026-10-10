@@ -1,0 +1,43 @@
+{
+  "manifest_version": 3,
+  "name": "Terminal Chess Bridge",
+  "version": "0.1.0",
+  "description": "Pairs a local mouse-driven chess terminal with your Chess.com tab. Unofficial.",
+  "permissions": [
+    "storage"
+  ],
+  "host_permissions": [
+    "https://www.chess.com/*",
+    "http://127.0.0.1:17391/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "options_page": "options.html",
+  "action": {
+    "default_title": "Bind this Chess.com tab to Terminal Chess"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.chess.com/play/*",
+        "https://www.chess.com/game/*"
+      ],
+      "js": [
+        "page.js"
+      ],
+      "world": "MAIN",
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://www.chess.com/play/*",
+        "https://www.chess.com/game/*"
+      ],
+      "js": [
+        "content.js"
+      ],
+      "run_at": "document_idle"
+    }
+  ]
+}

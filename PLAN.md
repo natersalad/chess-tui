@@ -1,6 +1,8 @@
 # Terminal Chess — design and implementation plan
 
-**Draft for discussion · October 10, 2026 · Implementation paused**
+**Approved design reference · October 10, 2026 · Implementation resumed**
+
+The working first release is documented in [README](README.md) and [runtime verification](docs/RUN.md). This plan retains the original concept images and proposals; current implementation uses an ANSI/Unicode TUI rather than bitmap graphics. Authenticated online verification remains pending.
 
 This plan describes a proposed product, not an implemented client. The images below are original design concepts, not screenshots of running software. They illustrate visual hierarchy and interaction states; exact terminal dimensions, rendering, and compatibility remain to be prototyped.
 
@@ -226,7 +228,7 @@ Report three distinct states: **implemented**, **runtime verified locally**, and
 - Which browser should host the companion, and is a dedicated profile preferable?
 - Should resign/draw actions be included in the first release, and where should they appear?
 
-Full mouse control and Noctalia color integration are confirmed requirements. The remaining items are discussion points, not blockers requiring answers before reading the draft. Implementation remains paused.
+Full mouse control and Noctalia color integration are confirmed requirements. The remaining items are discussion points, not blockers requiring answers before reading the draft. Implementation has resumed; see the runtime report for what is verified.
 
 ## Sources and current evidence
 

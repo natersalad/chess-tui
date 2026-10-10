@@ -1,0 +1,35 @@
+{
+  "name": "@natersalad/terminal-chess",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Mouse-driven terminal chess with read-only Noctalia colors",
+  "bin": {
+    "chess": "bin/chess.mjs"
+  },
+  "scripts": {
+    "start": "node bin/chess.mjs --here",
+    "test": "node --test test/*.test.mjs",
+    "check": "node scripts/check.mjs",
+    "install:local": "node scripts/install.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "chess.js": "^1.4.0",
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.58.0"
+  },
+  "files": [
+    "bin",
+    "src",
+    "extension",
+    "README.md",
+    "PLAN.md",
+    "docs",
+    "scripts/install.mjs"
+  ]
+}
