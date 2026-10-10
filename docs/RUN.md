@@ -46,3 +46,7 @@ Cancellation cleanup fully deletes the held sprite image and invalidates its upl
 Ghostty drag fallback: a Linux mouse-button reader handles missing right-button presses and left-button releases during a held gesture. It reads only left/right button transitions from mouse-capable devices while chess runs, does not grab devices or store input, and closes on exit. Normal terminal release events take priority. If device access is unavailable, terminal reporting remains the fallback. A live virtual-pointer test reproduced Ghostty withholding chord/release events; the direct physical mouse fallback still needs Nathan’s confirmation.
 
 Successful graphical moves use a quick 110 ms eased glide into the destination square, including click-to-move, drag placement and practice-bot moves. The held sprite stays cached during the glide; invalid drops and right-click cancellation remain immediate.
+
+Move-animation handoffs now prepare both images before changing the visible scene and swap the board and held sprite in one synchronized frame. Sprite removal on landing or cancellation occurs with the replacement board, closing the previous visibility gaps.
+
+Sounds distinguish ordinary placement, capture, check, checkmate and a drawn ending. One sound plays per confirmed move, with game ending/check taking priority over capture; illegal drops retain the error sound.
