@@ -19,7 +19,7 @@ Text rendering now diffs individual cells; unchanged frames emit nothing, and cl
 
 Actual Ghostty verification used Wayland virtual-pointer events and compositor captures, not a human hardware test. Samples measured unchanged board pixels while the right button was held, no blank board frames after release, and clearing on left-click. This is sampled live-runtime evidence, not a guarantee about every GPU refresh. Exact measurements are in `runtime/stability.json`.
 
-32 tests pass, including clear on empty/occupied-square clicks, mark release semantics, red derivation/fallback, no preview/transmission while dragging, buffer ordering, sparse text updates, legal moves/promotion, clocks, and the unchanged browser bridge boundaries. Syntax and asset checks pass.
+Existing checks cover clear on empty/occupied-square clicks, mark release semantics, red derivation/fallback, no preview/transmission while dragging, buffer ordering, sparse text updates, legal moves/promotion, clocks, and the unchanged browser bridge boundaries. Syntax and asset checks pass.
 
 Authenticated Chess.com play remains unverified. Existing extension setup is described in README; no real rated games or player messages were used to test this cleanup. This update adds no account setup or unrelated features.
 
@@ -56,3 +56,13 @@ Move and event sounds now use a CC0 recording of a real chess piece on a wooden 
 This machine uses local Chess.com default sounds from `work/chesscom-sounds/` when present, with bundled sounds as fallback. Downloaded third-party audio is ignored by Git and is not included in the repository or package. Checkmate uses Chess.com’s game-ending cue.
 
 The graphical board now uses nearly all available terminal height or width, with compact clock/status rows and two-cell side margins when width limits it. It retains physically square cells.
+
+## Current spacing adjustment
+
+The board reserves ten terminal rows vertically instead of six, starts at row five instead of three, and reserves only two columns horizontally instead of four. The clocks remain above and below the board.
+
+On Niri, chess fits only the Ghostty window proven to own its process to a narrower width once at launch. It restores the previous width on exit if you have not resized it yourself. It leaves other windows and desktop configuration alone. Resizing during play remains under your control; a wide window naturally has extra side space around a square board.
+
+Live Ghostty verification used a 95×51 terminal and a 90-column board after fitting, compared with the original 142-column window. The displayed board measured 1068×1069 compositor pixels (one-pixel rounding). Mouse-generated e2–e4, a right-release arrow, a red square mark and left-click clearing all succeeded. Core/graphics checks and syntax checks pass.
+
+![Updated spacing in the composited terminal](runtime/05-spacing.png)

@@ -42,8 +42,8 @@ export function render(app,cols,rows){const t=app.theme,f=new Frame(cols,rows,t)
   for(let c=0;c<8;c++)f.text(g.x+c*sw+Math.floor(sw/2),g.y+8*sh,String.fromCharCode(97+(flip?7-c:c)),t.muted);
   for(const a of [...app.arrows,...(app.drag?.to&&app.drag.to!==app.drag.from?[app.drag]:[])]){const p1=squareCenter(a.from,g,flip),p2=squareCenter(a.to,g,flip);f.line(p1.x,p1.y,p2.x,p2.y,t.tertiary);}
   }else if(!app.graphics){f.text(g.x,10,'Graphical board requires Kitty image support.',t.accent);f.text(g.x,12,'Use chess in the dedicated Ghostty session.',t.muted);}
-  const by=Math.ceil(g.y+sh*8+1);f.text(g.x,by,`${online?(snap?.players?.[bottom]||'You'):bottom==='w'?'WHITE':'BLACK'}  ${clock(remaining[bottom])}   ${app.result()||`${ch.turn()==='w'?'White':'Black'} to move${ch.isCheck()?' · CHECK':''}`}`.slice(0,cols-8),t.accent);
-  if(app.message&&!/^Click a piece|^Your move|^Choose a highlighted/.test(app.message))f.text(g.x,by+1,app.message.slice(0,cols-8),t.muted);
+  const by=Math.ceil(g.y+sh*8+2);f.text(g.x,by,`${online?(snap?.players?.[bottom]||'You'):bottom==='w'?'WHITE':'BLACK'}  ${clock(remaining[bottom])}   ${app.result()||`${ch.turn()==='w'?'White':'Black'} to move${ch.isCheck()?' · CHECK':''}`}`.slice(0,cols-8),t.accent);
+  if(app.message&&!/^Click a piece|^Your move|^Choose a highlighted/.test(app.message))f.text(g.x,by+2,app.message.slice(0,cols-8),t.muted);
 
  }
  if(app.modal)modal(f,app);

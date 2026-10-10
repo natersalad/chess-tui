@@ -1,0 +1,31 @@
+{
+  "terminal_cols": 95,
+  "terminal_rows": 51,
+  "board_bounds": [
+    1752,
+    167,
+    2820,
+    1236
+  ],
+  "geometry": {
+    "x": 3,
+    "y": 5,
+    "sw": 11.25,
+    "sh": 5.089285714285714,
+    "cols": 90,
+    "rows": 41,
+    "size": 1710,
+    "cell": {
+      "w": 19,
+      "h": 42
+    }
+  },
+  "legal_click_move": true,
+  "arrow_release": true,
+  "red_mark": true,
+  "left_click_clears": true,
+  "window_logical_size": [
+    909,
+    1096
+  ]
+}

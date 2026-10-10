@@ -66,3 +66,5 @@ Smooth dragging: the board stays cached during motion, and the held piece is upl
 Right-click while holding a piece cancels the drag and restores its original square, without creating an annotation or making a move. Successful placements play a short local piece sound; invalid drops retain their separate error tone. Online placement sound waits for a confirmed board change rather than a submitted request.
 
 Successful graphical moves use a quick 110 ms eased glide into the destination square, including click-to-move, drag placement and practice-bot moves. The held sprite stays cached during the glide; invalid drops and right-click cancellation remain immediate.
+
+Chess uses slim side margins and more vertical breathing room. On Niri it fits its own terminal width once, restoring the previous width on exit unless you resize it. Global desktop settings stay unchanged.
