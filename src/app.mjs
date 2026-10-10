@@ -59,7 +59,7 @@ export class App {
   this.moveAnimation=null;
  }
  async move(from,to,promotion='q',origin){
-  if(this.busy)return;this.busy=true;this.selected=null;this.arrows=[];this.circles=[];this.message='';this.changed();
+  if(this.busy)return;this.busy=true;this.selected=null;this.arrows=[];this.circles=[];this.message='';
   await this.animateMove(from,to,origin);if(this.closed)return;
   if(this.mode==='online'){const r=await this.bridge.command('move',{from,to,promotion});this.message=r.ok?'Move submitted · waiting for website state':r.error;}
   else{const m=this.local.move(from,to,promotion);if(!m)this.message='Move could not be applied.';else{this.message=`${m.san}`;this.onMove();}}
