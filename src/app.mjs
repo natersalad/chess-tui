@@ -24,8 +24,9 @@ export class App {
   if(e.type==='key'){const map={'quit':'force-exit','?':'help','f':'flip','a':'annotate','c':'clear','escape':'close'};if(map[e.key])return this.action(map[e.key]);return;}
   if(e.type!=='mouse'||e.wheel)return;
   if(this.modal||this.screen==='menu'||!this.geometry){if(!e.motion&&!e.release&&e.button===0)this.clickButton(e);return;}
+  if(this.cancelledDrag){if(e.button===0&&e.release){this.cancelledReleased=true;return;}if(this.cancelledReleased&&e.button===0&&!e.motion&&!e.release){this.cancelledDrag=false;this.cancelledReleased=false;}else return;}
   const sq=squareAt(e.x,e.y,this.geometry,this.flip);
-  if(this.pieceDrag&&e.button===2){this.pieceDrag=null;this.selected=null;this.drag=null;this.message='';this.changed();return;}
+  if(this.pieceDrag&&e.button===2){this.cancelledDrag=true;this.cancelledReleased=false;this.pieceDrag=null;this.selected=null;this.drag=null;this.message='';this.changed();return;}
   if(this.pieceDrag&&e.motion&&e.button===0){const d=this.pieceDrag;d.moved ||= e.x!==d.startX||e.y!==d.startY;d.x=e.x;d.y=e.y;d.pixelX=e.pixelX;d.pixelY=e.pixelY;(this.dragChanged||this.changed)();return;}
   if(this.pieceDrag&&e.release&&e.button===0){const d=this.pieceDrag;this.pieceDrag=null;if(!d.moved&&sq===d.from){this.changed();return;}const moves=sq?this.chess().moves({square:d.from,verbose:true}).filter(m=>m.to===sq):[];if(!moves.length){this.selected=null;this.message='Invalid drop';this.onInvalidDrop();this.changed();return;}if(moves.some(m=>m.promotion)){this.promotion={from:d.from,to:sq};this.modal='promotion';this.changed();return;}await this.move(d.from,sq);return;}
   if(!e.motion&&!e.release&&e.button===0)this.pieceDrag=null;
