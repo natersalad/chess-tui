@@ -30,3 +30,5 @@ Authenticated Chess.com play remains unverified. Existing extension setup is des
 ![Release-committed gold arrow and red square mark](runtime/04-annotations.png)
 
 The screenshots are actual running-app captures. The earlier ASCII board is retained as `runtime/before-ascii.png` for comparison only.
+
+Knight-move annotations use a right-angle bend: the two-square leg first, then the one-square leg, in either board orientation. Other arrows remain straight.

@@ -30,8 +30,8 @@ export function boardSVG(app,size=960){const t=app.theme,ch=app.chess(),flip=app
   if(r===7)parts.push(`<text x="${x+s*.86}" y="${y+s*.94}" fill="${coord}" font-family="sans-serif" font-size="${font}">${String.fromCharCode(97+(flip?7-c:c))}</text>`);
  }
  for(const a of app.arrows){
-  const from=xy(a.from),to=xy(a.to),x=from.x+s/2,y=from.y+s/2,ex=to.x+s/2,ey=to.y+s/2,angle=Math.atan2(ey-y,ex-x),head=s*.36,bx=ex-head*Math.cos(angle),by=ey-head*Math.sin(angle),half=s*.22;
-  parts.push(`<g fill="#ffbc32" stroke="#ffbc32" opacity=".72"><path d="M${x} ${y} L${bx} ${by}" stroke-width="${s*.19}" stroke-linecap="butt"/><path d="M${ex} ${ey} L${bx-half*Math.sin(angle)} ${by+half*Math.cos(angle)} L${bx+half*Math.sin(angle)} ${by-half*Math.cos(angle)} Z" stroke="none"/></g>`);
+  const from=xy(a.from),to=xy(a.to),x=from.x+s/2,y=from.y+s/2,ex=to.x+s/2,ey=to.y+s/2,dx=ex-x,dy=ey-y,knight=(Math.abs(dx)===s&&Math.abs(dy)===2*s)||(Math.abs(dx)===2*s&&Math.abs(dy)===s),bend=knight?(Math.abs(dx)>Math.abs(dy)?{x:ex,y}:{x,y:ey}):null,angle=Math.atan2(ey-(bend?.y??y),ex-(bend?.x??x)),head=s*.36,bx=ex-head*Math.cos(angle),by=ey-head*Math.sin(angle),half=s*.22;
+  parts.push(`<g fill="#ffbc32" stroke="#ffbc32" opacity=".72"><path d="M${x} ${y} ${bend?`L${bend.x} ${bend.y} `:''}L${bx} ${by}" fill="none" stroke-width="${s*.19}" stroke-linecap="butt" stroke-linejoin="miter"/><path d="M${ex} ${ey} L${bx-half*Math.sin(angle)} ${by+half*Math.cos(angle)} L${bx+half*Math.sin(angle)} ${by-half*Math.cos(angle)} Z" stroke="none"/></g>`);
  }
  return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">${parts.join('')}</svg>`;
 }
