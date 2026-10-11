@@ -1,4 +1,4 @@
-# Terminal Chess
+# Chess TUI
 
 A working mouse-driven chess TUI for Nathan, with read-only Noctalia colors, local two-player play, a weak offline practice bot, and an experimental Chess.com browser bridge. Private project.
 

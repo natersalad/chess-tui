@@ -9,7 +9,7 @@ Form: https://docs.google.com/forms/d/e/1FAIpQLSds2AeKLj9xqgu96Pu-rEAS0ItyqDbZbS
 | Name | Nathan must provide the submission name. |
 | Email | Nathan must choose a contact email. No address is inferred. |
 | Chess.com account | Nathan must confirm the username. |
-| Application name | Terminal Chess |
+| Application name | Chess TUI |
 | Description | Copy the draft below after review. |
 | Project demonstration link | Required HTTPS/HTTP link. Not created or published. Share only an approved redacted demo; do not disclose or change visibility of the private repository. |
 | Optional logo | Leave blank. |
@@ -23,7 +23,7 @@ The WebView question and WebSocket question are on the Connected Board branch. T
 
 ## Description to review
 
-I am building Terminal Chess, a non-commercial personal Linux desktop chess client. It has an original graphical board inside a terminal and lets a person deliberately select moves with the mouse, view position/clocks, and add local annotations. I would like to connect this alternate input/display surface to my own Chess.com games using your supported integration rather than undocumented page methods.
+I am building Chess TUI, a non-commercial personal Linux desktop chess client. It has an original graphical board inside a terminal and lets a person deliberately select moves with the mouse, view position/clocks, and add local annotations. I would like to connect this alternate input/display surface to my own Chess.com games using your supported integration rather than undocumented page methods.
 
 I am requesting confirmation that a software-only board client is eligible for Connected Board access. The current build has a local WebSocket server, but does not yet contain an interactive embedded browser. I can add an interactive companion WebView if your supported arrangement requires it. Please confirm whether this architecture is eligible and whether a normal external browser is an acceptable alternative.
 
