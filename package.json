@@ -32,6 +32,8 @@
     "README.md",
     "PLAN.md",
     "docs",
-    "scripts/install.mjs"
-  ]
+    "scripts/install.mjs",
+    "LICENSE"
+  ],
+  "license": "MIT"
 }

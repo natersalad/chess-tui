@@ -64,3 +64,7 @@ Right-click while holding a piece cancels the drag and restores its original squ
 Successful graphical moves use a quick 110 ms eased glide into the destination square, including click-to-move, drag placement and practice-bot moves. The held sprite stays cached during the glide; invalid drops and right-click cancellation remain immediate.
 
 Chess uses slim explicit side margins and more vertical breathing room. It preserves your existing terminal dimensions and manual resizing. A square board in a wide window naturally leaves extra side space.
+
+## License
+
+Code and original artwork are licensed under [MIT](LICENSE). Bundled wooden sound recordings retain their CC0 terms and attribution in [assets/ATTRIBUTION.md](assets/ATTRIBUTION.md); dependencies retain their respective licenses. Locally downloaded Chess.com sounds are not distributed. Reference screenshots are documentation only and are not included in the Arch package.
