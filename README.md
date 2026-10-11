@@ -51,7 +51,7 @@ Normal launch uses the current terminal and returns to the shell when you exit. 
 - `chess --window`: open a separate Ghostty window with mouse reporting enabled for that session.
 - `chess --text`: use the basic text renderer explicitly.
 - `chess --doctor`: report local capabilities and connection status.
-- `chess --setup`: open the supported Chess.com access-request guidance.
+- `chess --setup`: print the supported Chess.com access-request guidance.
 - `chess --help`: list launch options.
 
 ## License
