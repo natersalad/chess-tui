@@ -30,7 +30,7 @@ For a failure, share the failing command and error, `brew --version`, `node --ve
 
 ## Source, dependencies and verification
 
-The formula pins upstream revision `27415f5ee5349d4b4da4d44bbca9f61753f9d0d6`, matching package version 0.1.0, and checks the archive SHA-256. This is an immutable source snapshot; the only existing release tag is a demo, not a stable software release. A proper versioned release and platform CI are needed before proposing homebrew-core inclusion.
+The formula pins upstream revision `25a54192521f0125648301f60cc26d1c8bee1afe`, matching package version 0.1.0, and checks the archive SHA-256. This is an immutable source snapshot; the only existing release tag is a demo, not a stable software release. A proper versioned release and platform CI are needed before proposing homebrew-core inclusion.
 
 Node is the runtime dependency. The current Homebrew `fetch` phase downloads the lockfile's production npm dependencies into a build-local cache; `install` repeats `npm ci` offline with lifecycle scripts disabled. Runtime files and platform-appropriate sharp binaries are installed under libexec. No dev browser dependencies, source screenshots, GIF/MP4, work directory or locally downloaded Chess.com audio are installed. Original code/artwork use MIT and bundled recordings retain CC0 attribution; dependencies retain their own licenses. No bottles have been built.
 
@@ -61,3 +61,16 @@ brew install --build-from-source natersalad/chess-tui/chess-tui
 ```
 
 The actual project remote, raw formula and pinned source archive were verified publicly reachable. If the explicit command still fails, report the exact failing command, the repository URL named by the error, and `brew --version`; do not share credentials. The subsequent authorized Apple Silicon Mac install and formula tests succeeded, as recorded above; actual Ghostty gameplay remains unverified.
+
+## Rendering update (revision 1)
+
+The formula now includes a focused board-swap change: retain the two board image buffers during ordinary swaps, retire only the old placement, and fully release images on hide/exit. It preserves synchronized handoffs and sprite cleanup. Syntax plus 39 focused graphics/input/game tests pass on Linux. Nathan confirmed Mac gameplay, but reported harsh refresh; the improvement still needs a Mac visual playtest. Exit the current game before updating:
+
+```sh
+brew update
+brew upgrade --build-from-source natersalad/chess-tui/chess-tui
+brew test natersalad/chess-tui/chess-tui
+chess-tui
+```
+
+Compare normal click moves and drag/drop against the previous version. Report whether the full board still flashes; tests verify protocol sequences, not perceived flicker.

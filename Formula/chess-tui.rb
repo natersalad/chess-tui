@@ -1,9 +1,10 @@
 class ChessTui < Formula
   desc "Mouse-driven graphical terminal chess with offline play"
   homepage "https://github.com/natersalad/chess-tui"
-  url "https://github.com/natersalad/chess-tui/archive/27415f5ee5349d4b4da4d44bbca9f61753f9d0d6.tar.gz"
+  url "https://github.com/natersalad/chess-tui/archive/25a54192521f0125648301f60cc26d1c8bee1afe.tar.gz"
   version "0.1.0"
-  sha256 "6269117aaddb2f4e9467f3fd0c5adb86a167c9772af7f60f60beb96cc19974b4"
+  revision 1
+  sha256 "58ec51326d46286db597a47e0e6dbefac1753b68aee2a0cf6c971b8ee9f5b5b5"
   license all_of: ["MIT", "CC0-1.0"]
 
   depends_on "node"
