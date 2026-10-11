@@ -34,7 +34,7 @@ The formula pins upstream revision `27415f5ee5349d4b4da4d44bbca9f61753f9d0d6`, m
 
 Node is the runtime dependency. The current Homebrew `fetch` phase downloads the lockfile's production npm dependencies into a build-local cache; `install` repeats `npm ci` offline with lifecycle scripts disabled. Runtime files and platform-appropriate sharp binaries are installed under libexec. No dev browser dependencies, source screenshots, GIF/MP4, work directory or locally downloaded Chess.com audio are installed. Original code/artwork use MIT and bundled recordings retain CC0 attribution; dependencies retain their own licenses. No bottles have been built.
 
-Completed on Linux: source checksum, Ruby syntax, network fetch followed by locked offline dependency install, syntax checks, 44 focused runtime tests, staged `--help`/`--doctor`, and native sharp PNG rendering. No global install occurred. **Actual Homebrew install/test/audit and macOS gameplay are not verified** because Homebrew and a Mac are unavailable in this environment.
+Completed on Linux: source checksum, Ruby syntax, network fetch followed by locked offline dependency install, syntax checks, 44 focused runtime tests, staged `--help`/`--doctor`, and native sharp PNG rendering. No global install occurred. **Apple Silicon Mac verification (2026-10-11):** the coordinator reported an authorized SSH test in which the explicit-URL tap succeeded, `brew install --build-from-source natersalad/chess-tui/chess-tui` exited 0 and installed 0.1.0, and `brew test natersalad/chess-tui/chess-tui` exited 0 with help, doctor and Sharp PNG checks. This is a supported coordinator result, not a local Linux observation. Actual Ghostty gameplay and `brew audit` remain unverified; macOS sound/window limitations still apply.
 
 After installing, maintainers should also run:
 
@@ -60,4 +60,4 @@ brew tap-info natersalad/chess-tui
 brew install --build-from-source natersalad/chess-tui/chess-tui
 ```
 
-The actual project remote, raw formula and pinned source archive were verified publicly reachable. If the explicit command still fails, report the exact failing command, the repository URL named by the error, and `brew --version`; do not share credentials. This diagnosis does not establish a successful Mac install.
+The actual project remote, raw formula and pinned source archive were verified publicly reachable. If the explicit command still fails, report the exact failing command, the repository URL named by the error, and `brew --version`; do not share credentials. The subsequent authorized Apple Silicon Mac install and formula tests succeeded, as recorded above; actual Ghostty gameplay remains unverified.

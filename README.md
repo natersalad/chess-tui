@@ -48,7 +48,7 @@ brew install --build-from-source natersalad/chess-tui/chess-tui
 chess-tui
 ```
 
-Use Ghostty in the current terminal. The formula installs `chess-tui` without replacing `chess`. Linux staged-runtime checks passed; Homebrew installation and macOS gameplay still need testing. On macOS, sounds are not implemented and `--window` is unsupported. See the [Mac smoke-test and troubleshooting instructions](packaging/homebrew/README.md).
+Use Ghostty in the current terminal. The formula installs `chess-tui` without replacing `chess`. Linux staged-runtime checks and Apple Silicon Mac Homebrew install/formula tests passed; actual macOS gameplay still needs testing. On macOS, sounds are not implemented and `--window` is unsupported. See the [Mac smoke-test and troubleshooting instructions](packaging/homebrew/README.md).
 
 ## Launch and play
 
