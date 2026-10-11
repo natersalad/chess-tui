@@ -8,7 +8,7 @@ With an existing current Homebrew installation, run:
 
 ```sh
 brew update
-brew tap natersalad/chess-tui https://github.com/natersalad/chess-tui.git
+brew tap --custom-remote natersalad/chess-tui https://github.com/natersalad/chess-tui.git
 brew install --build-from-source natersalad/chess-tui/chess-tui
 brew test natersalad/chess-tui/chess-tui
 ```
@@ -49,3 +49,15 @@ Official references:
 - https://docs.brew.sh/Formula-Cookbook
 - https://docs.brew.sh/How-to-Create-and-Maintain-a-Tap
 - https://docs.brew.sh/Acceptable-Formulae
+
+## “Repository not found” during tapping
+
+Homebrew's one-argument `brew tap natersalad/chess-tui` (and automatic tapping from an install command) looks for `natersalad/homebrew-chess-tui`, which does not exist. Keep the entire explicit-URL tap command on one line and run it successfully before `brew install`. `--custom-remote` also repairs an existing tap's remote:
+
+```sh
+brew tap --custom-remote natersalad/chess-tui https://github.com/natersalad/chess-tui.git
+brew tap-info natersalad/chess-tui
+brew install --build-from-source natersalad/chess-tui/chess-tui
+```
+
+The actual project remote, raw formula and pinned source archive were verified publicly reachable. If the explicit command still fails, report the exact failing command, the repository URL named by the error, and `brew --version`; do not share credentials. This diagnosis does not establish a successful Mac install.

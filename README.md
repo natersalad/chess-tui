@@ -43,7 +43,7 @@ An Arch Linux package build is available in [packaging/aur](packaging/aur/README
 With Homebrew already installed:
 
 ```sh
-brew tap natersalad/chess-tui https://github.com/natersalad/chess-tui.git
+brew tap --custom-remote natersalad/chess-tui https://github.com/natersalad/chess-tui.git
 brew install --build-from-source natersalad/chess-tui/chess-tui
 chess-tui
 ```
