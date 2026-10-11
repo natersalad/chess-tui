@@ -4,7 +4,7 @@ A working mouse-driven chess TUI for Nathan, with read-only Noctalia colors, loc
 
 ## Offline gameplay demo
 
-[![Full-board offline gameplay demo](docs/runtime/offline-demo-thumbnail.jpg)](https://github.com/natersalad/chess-tui/releases/download/offline-demo-v1/chess-tui-demo-v2.mp4)
+[![Animated offline gameplay demo](docs/runtime/offline-demo.gif)](https://github.com/natersalad/chess-tui/releases/download/offline-demo-v1/chess-tui-demo-v2.mp4)
 
 [Watch or download the 37.5-second silent video](https://github.com/natersalad/chess-tui/releases/download/offline-demo-v1/chess-tui-demo-v2.mp4), or view the [demo release](https://github.com/natersalad/chess-tui/releases/tag/offline-demo-v1). This shows the offline prototype. The Chess.com access request has been submitted; live integration is not approved or connected. The video is hosted as a release asset rather than duplicated in Git history.
 
