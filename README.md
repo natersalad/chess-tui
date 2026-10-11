@@ -38,6 +38,18 @@ The installer creates a `chess` launcher in `~/.local/bin`; include that directo
 
 An Arch Linux package build is available in [packaging/aur](packaging/aur/README.md). It is not published in AUR yet.
 
+### Homebrew (initial test candidate)
+
+With Homebrew already installed:
+
+```sh
+brew tap natersalad/chess-tui https://github.com/natersalad/chess-tui.git
+brew install --build-from-source natersalad/chess-tui/chess-tui
+chess-tui
+```
+
+Use Ghostty in the current terminal. The formula installs `chess-tui` without replacing `chess`. Linux staged-runtime checks passed; Homebrew installation and macOS gameplay still need testing. On macOS, sounds are not implemented and `--window` is unsupported. See the [Mac smoke-test and troubleshooting instructions](packaging/homebrew/README.md).
+
 ## Launch and play
 
 ```sh
