@@ -1,74 +1,59 @@
 # Chess TUI
 
-A mouse-driven graphical chess TUI with read-only Noctalia colors, local two-player play, a weak offline practice bot, and an approval-gated Chess.com integration. Online access is not approved or connected; the old bridge is retained only for fixture research.
+A mouse-driven graphical chess app that runs in your terminal, with local two-player play, an offline practice opponent, clocks, and annotations.
 
-## Offline gameplay demo
+## Demo
 
 [![Animated offline gameplay demo](docs/runtime/offline-demo.gif)](https://github.com/natersalad/chess-tui/releases/download/offline-demo-v1/chess-tui-demo-v2.mp4)
 
-[Watch or download the 37.5-second silent video](https://github.com/natersalad/chess-tui/releases/download/offline-demo-v1/chess-tui-demo-v2.mp4), or view the [demo release](https://github.com/natersalad/chess-tui/releases/tag/offline-demo-v1). This shows the offline prototype. The Chess.com access request has been submitted; live integration is not approved or connected. The video is hosted as a release asset rather than duplicated in Git history.
+[Watch or download the full-resolution video](https://github.com/natersalad/chess-tui/releases/download/offline-demo-v1/chess-tui-demo-v2.mp4), or view the [demo release](https://github.com/natersalad/chess-tui/releases/tag/offline-demo-v1). The demo shows offline gameplay.
 
-## Launch
+## Features
+
+- Original graphical pieces, physically square board geometry, and responsive sizing.
+- Local two-player games and a simple offline practice opponent.
+- 1, 3, 5, 10, and 15+10 time controls, with clocks and game results.
+- Click-to-move or hold-and-drag input, legal move validation, castling, en passant, and promotion.
+- Open-hand and closed-hand cursors, quick move animations, and right-click drag cancellation.
+- Right-drag arrows, bent knight-move arrows, and right-click square marks. Left-click clears annotations.
+- Distinct sounds for moves, captures, check, checkmate, draws, and invalid drops.
+- Read-only Noctalia color integration with a fallback palette, plus terminal transparency.
+
+![Graphical board with selection and annotations](docs/runtime/04-annotations.png)
+
+**Chess.com live play is not available yet.** The access request is submitted and awaiting review. The public API cannot submit moves, and the required embedded browser is not implemented. Offline play works independently.
+
+## Download and install
+
+Requires Node.js 22+, npm, and a terminal that supports Kitty graphics, truecolor, and mouse reporting. Ghostty is the tested terminal. Minimum terminal size: 72 columns × 36 rows. `paplay` from `libpulse` is optional for sounds; `xdg-open` from `xdg-utils` is optional for opening setup/help links.
 
 ```sh
 git clone https://github.com/natersalad/chess-tui.git
 cd chess-tui
 npm ci
 npm run install:local
+```
+
+The installer creates a `chess` launcher in `~/.local/bin`; include that directory in your `PATH`. It refuses to overwrite an unrelated existing launcher and does not change desktop or terminal configuration.
+
+An Arch Linux package build is available in [packaging/aur](packaging/aur/README.md). It is not published in AUR yet.
+
+## Launch and play
+
+```sh
 chess
 ```
 
-The local installer creates a `chess` launcher in `~/.local/bin`; make sure that directory is in your `PATH`. It refuses to overwrite an unrelated existing launcher. Normal launch runs inside the terminal where you type it and returns to that shell when you exit. `chess --here` remains an alias for this default. The current terminal must permit mouse reporting. Enable it in your terminal settings if mouse input is disabled. `chess --window` optionally opens a separate mouse-enabled Ghostty session without changing global settings. Node.js 22+ is required. Minimum size: 72 columns × 36 rows. Ghostty with truecolor is the tested target.
+Choose a mode and time control with the mouse, then start. Click a piece and destination, or hold the left mouse button to drag and release on a legal square. Invalid drops return the piece and play an error sound. Right-click while holding a piece cancels the drag. Promotion waits for your choice.
 
-Click a mode, choose 1, 3, 5, 10, or 15+10, then start. Click a piece and destination. Right-drag and release draws an arrow; same-square right-click/release marks a square red. Normal left-click clears all annotations. There is no drag preview or in-game toolbar. The launch menu and promotion choices remain mouse-controlled. Keyboard shortcuts are optional; move coordinates are never required.
+Normal launch uses the current terminal and returns to the shell when you exit. Enable mouse reporting in your terminal settings if mouse input is disabled. The board preserves your terminal dimensions and supports manual resizing.
 
-## Actual runtime
-
-These are screenshots of the running application in Ghostty, captured through the compositor. The selection/annotation state followed real application mouse events generated through a Wayland virtual pointer, not a human hardware test. They are not design mockups.
-
-![Running board after e4 e5, knight selection, and a user arrow](docs/runtime/04-annotations.png)
-
-The primary board uses original, centered outlined vector pieces rasterized to PNG through Ghostty's Kitty graphics protocol. No ASCII or piece letters appear in this renderer. Coordinates sit inside the board edges; arrows are broad, translucent gold and square marks are translucent Noctalia-derived red. Normal terminal transparency surrounds the board. Clock-only text updates are sparse, and board changes use a completed inactive image buffer before swapping, rather than clearing the visible image. `chess --text` is an explicit basic fallback.
-
-The optional `--window` launcher disables titlebar/tab chrome with per-process options and preserves global Ghostty/Noctalia configuration. See the run guide for actual stability samples and limits.
-
-## Chess.com supported access
-
-**Live play is not connected.** Production now uses an approval-required provider and does not start the undocumented page-method bridge. The public API cannot submit moves. Review [supported integration design](docs/CHESSCOM-ACCESS.md) and [application packet](docs/CHESSCOM-APPLICATION.md). The official request form requires an interactive WebView plus a WebSocket server for the connected-board route; this terminal has no embedded browser yet, and software-only eligibility is unconfirmed.
-
-`chess --setup` prints the supported request route. The original extension and bridge remain fixture-only research files; do not use them as a supported live-play setup. Local play, original graphics, Noctalia colors, mouse controls and window dimensions remain unchanged. No engine advice is available online. The integration access request has been submitted and awaits review. No live-game action has been submitted.
-
-## Development
-
-```sh
-npm ci
-npx playwright install chromium  # only needed for browser fixture tests
-npm test
-npm run check
-```
-
-Tests cover legal special moves, clocks/results, mouse routing, annotations/promotion, contrast/schema validation, bridge authentication/ownership/staleness, browser control guards, and the full extension transport. Browser fixture tests never contact Chess.com; requests are intercepted locally. `CHESS_TEST_BROWSER` can override the browser executable for tests.
-
-Reference: [a7mddra/chess-tui](https://github.com/a7mddra/chess-tui) informed the browser-board architecture. The tracked client and extension are original code; no upstream implementation was copied. Its MIT license was reviewed before development.
-
-Knight-move annotations use a right-angle bend: the two-square leg first, then the one-square leg, in either board orientation. Other arrows remain straight.
-
-Hold the left mouse button on your piece and drag it across the board. Release to make a legal move. An invalid or off-board drop returns the piece to its original square and plays a short local error tone through `paplay`. Click-then-click movement still works. Promotion waits for your choice. Restart chess to load updates.
-
-The pointer becomes an open hand over a movable piece and a closed hand while the left button holds it. Ghostty cursor shapes use [OSC 22](https://ghostty.org/docs/vt/osc/22); the app restores the terminal cursor on exit. Hovering alone never moves a piece.
-
-Smooth dragging: the board stays cached during motion, and the held piece is uploaded once as a transparent sprite. Subsequent motion sends only a small placement update, using sub-cell pixel offsets. Pixel mouse reporting is enabled only after a supported-mode reply; other terminals keep the cell-coordinate fallback. This uses the [Kitty graphics placement protocol](https://sw.kovidgoyal.net/kitty/graphics-protocol/). No animation or interpolation is added. Automated checks verify 60 consecutive movements without re-uploading the board or sprite. Perceived smoothness depends on terminal support and should be checked during play.
-
-Right-click while holding a piece cancels the drag and restores its original square, without creating an annotation or making a move. Successful placements play a short local piece sound; invalid drops retain their separate error tone. Online placement sound waits for a confirmed board change rather than a submitted request.
-
-Successful graphical moves use a quick 110 ms eased glide into the destination square, including click-to-move, drag placement and practice-bot moves. The held sprite stays cached during the glide; invalid drops and right-click cancellation remain immediate.
-
-Chess uses slim explicit side margins and more vertical breathing room. It preserves your existing terminal dimensions and manual resizing. A square board in a wide window naturally leaves extra side space.
+- `chess --window`: open a separate Ghostty window with mouse reporting enabled for that session.
+- `chess --text`: use the basic text renderer explicitly.
+- `chess --doctor`: report local capabilities and connection status.
+- `chess --setup`: open the supported Chess.com access-request guidance.
+- `chess --help`: list launch options.
 
 ## License
 
-Code and original artwork are licensed under [MIT](LICENSE). Bundled wooden sound recordings retain their CC0 terms and attribution in [assets/ATTRIBUTION.md](assets/ATTRIBUTION.md); dependencies retain their respective licenses. Locally downloaded Chess.com sounds are not distributed. Reference screenshots are documentation only and are not included in the Arch package.
-
-## Arch Linux / AUR preparation
-
-A tested [`chess-tui-git` PKGBUILD](packaging/aur/chess-tui-git/PKGBUILD) and `.SRCINFO` are prepared. **The package is not published in AUR yet**; maintainer contact and AUR SSH authentication still need setup. See [packaging notes](packaging/aur/README.md).
+Code and original artwork are licensed under [MIT](LICENSE). Bundled wooden recordings retain their CC0 terms and [attribution](assets/ATTRIBUTION.md); dependencies retain their respective licenses. Locally downloaded Chess.com sounds are not distributed.
