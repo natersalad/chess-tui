@@ -1,42 +1,31 @@
-# Chess.com access request — review draft, not submitted
+# Chess.com access request — submitted 2026-10-10
 
-Form: https://docs.google.com/forms/d/e/1FAIpQLSds2AeKLj9xqgu96Pu-rEAS0ItyqDbZbSgUFer0Mo6qMRx4Jg/viewform
+**The application was submitted successfully.** The browser confirmation was “Your response has been recorded”. The previous version of this file was a preparation draft; its contact placeholders were not submitted. No live access approval has been received.
 
-## Field packet
+## Submitted fields — sanitized public summary
 
-| Form field | Proposed response / status |
+| Form field | Actual submitted response |
 |---|---|
-| Name | Nathan must provide the submission name. |
-| Email | Nathan must choose a contact email. No address is inferred. |
-| Chess.com account | Nathan must confirm the username. |
+| Name, email, Chess.com username | Nathan's supplied values were entered and checked in the form. Personal contact/account details are omitted from this public document. |
 | Application name | Chess TUI |
-| Description | Copy the draft below after review. |
-| Project demonstration link | Required HTTPS/HTTP link. Not created or published. Share only an approved redacted demo; do not disclose or change visibility of the private repository. |
-| Optional logo | Leave blank. |
-| Optional terms/privacy links | Leave blank only if Nathan accepts the form's stated default terms/privacy consequence. No URLs are invented. |
-| Connected Board request | Yes, as a request for software-board eligibility, explicitly described below. |
-| Interactive embedded WebView | **No in the current build.** An external browser exists; it is not an embedded WebView. If the companion is implemented before submission, update this answer only after verifying it works. Do not mark Yes for a plan. |
-| WebSocket server capability | Yes. A loopback Node/WebSocket server is fixture-tested, but not yet an approved protocol implementation. |
-| OAuth-only branch redirects | Not a substitute for live-play access. If Chess.com routes us to this branch, request its supported native flow first; provide only an exact implemented/registered redirect, never a wildcard or speculative URI. |
+| Project demonstration link | https://github.com/natersalad/chess-tui/releases/tag/offline-demo-v1 |
+| Connected Board request | Yes — requesting software-terminal eligibility. |
+| Interactive embedded WebView | No — not implemented. |
+| WebSocket server capability | Yes — local capability fixture-tested; production live transport disabled pending approval. |
+| Optional logo, Terms of Service and Privacy Policy URLs | Blank. Nathan explicitly confirmed the stated default terms/privacy condition before submission. |
 
-The WebView question and WebSocket question are on the Connected Board branch. The OAuth-only branch has a required exact redirect field. The public form page supplies these branch fields without submitting or visiting an authenticated account.
+The first-page required fields were verified present and valid before advancing. The capability selections were revalidated before a single Submit click. The recorded-response confirmation was then observed and captured. This is a summary of verified browser actions, not a Google-generated response export. A detailed private receipt is held locally outside Git; do not publish it.
 
-## Description to review
+## Submitted project description
 
-I am building Chess TUI, a non-commercial personal Linux desktop chess client. It has an original graphical board inside a terminal and lets a person deliberately select moves with the mouse, view position/clocks, and add local annotations. I would like to connect this alternate input/display surface to my own Chess.com games using your supported integration rather than undocumented page methods.
+I am building Chess TUI, a non-commercial personal Linux desktop client with an original graphical terminal board, mouse-selected human moves, clocks and local annotations. I request confirmation that a software-only terminal board is eligible for Connected Board access through your supported protocol. Local WebSocket server capability is fixture-tested; production live-play transport is disabled pending approval. The current build has no interactive embedded WebView. I can add a companion WebView if required; please confirm whether an external browser is an acceptable alternative.
 
-I am requesting confirmation that a software-only board client is eligible for Connected Board access. The current build has a local WebSocket server, but does not yet contain an interactive embedded browser. I can add an interactive companion WebView if your supported arrangement requires it. Please confirm whether this architecture is eligible and whether a normal external browser is an acceptable alternative.
+The required product UX is automatic management of an app-owned companion browser process with a dedicated persistent profile. The terminal is the sole normal gameplay interface, and the companion window remains hidden during ordinary play. It appears for login, consent, required setup, recovery or an explicit Open browser action. The companion only transports authenticated game/client state and relays human-selected moves; it makes no chess decisions, analysis or move suggestions. Please explicitly confirm compatibility of hidden normal-play mode with the interactive WebView requirement. Continuous required browser visibility would conflict with this product direction. This is not a request for headless automation or bypassing login/consent. The companion is separate from the normal browser and must not implicitly resign on terminal exit; please provide lifecycle/reconnection requirements.
 
-My required UX is for launching the terminal app to automatically start an app-owned companion process with a dedicated persistent browser profile. The terminal is the sole normal gameplay interface. The companion window appears for login, consent, required setup, recovery or an explicit Open browser action, and remains hidden during ordinary play. Its only gameplay role is authenticated game/client-state transport and relaying moves explicitly selected by the human; it makes no chess decisions, analysis or move suggestions. Please explicitly confirm whether hidden normal-play mode is compatible with your interactive WebView requirement. If continuous browser visibility is mandatory, it conflicts with this product direction; I would need to know that before implementation rather than treat a visible companion as equivalent. I am not asking to substitute headless automation for an interactive WebView or bypass login/consent. The companion is managed separately from the user's normal browser, with a visible recovery option, and would not implicitly resign a game on terminal exit. Please provide lifecycle/reconnection requirements as well.
+There is no engine analysis, move recommendation or automatic online gameplay. Offline practice is separate. Account consent, matchmaking and game actions remain deliberate and use only documented protocols and granted permissions. Please provide SDK/protocol documentation, registration prerequisites, supported native authentication, allowed game types and a test procedure.
 
-There is no engine analysis, move recommendation, or automatic game-play in online mode. The local practice opponent is separate from online play. Account consent, matchmaking and other game actions would remain deliberate, and the implementation would use only your documented protocol and granted permissions. I would appreciate the relevant SDK/protocol documentation, registration prerequisites, supported native authentication flow, allowed game types, and a recommended test procedure.
+The repository is public with the owner's approval. The linked release contains an approved 37.5-second silent recording of actual offline gameplay, with no claim of working Chess.com integration. I am not requesting access using another board's credentials. Please advise on additional review requirements before live implementation.
 
-The code repository is public with the project owner's approval. An approved offline gameplay demonstration can be provided; I am not requesting access using someone else's board credentials. The demo will use original piece artwork and custom colors, with no third-party audio. Please advise on any additional review or compliance requirements before live implementation.
+## Current status
 
-## Demonstration prepared for approval
-
-A local `demo.html` and board screenshot accompany the exported packet. They show the offline terminal prototype and plainly state that Chess.com access is not approved and a companion is not implemented. They contain no pairing token, browser/account details, private repository URL, or downloaded sounds.
-
-This is ready to review, not ready to submit blindly: contact identity, an approved shareable demo URL, and the WebView/access choice remain required. Do not email Chess.com or Chessconnect, publish a demo, invite repository access, or submit the form without Nathan's direct approval.
-
-This UX clarification authorizes documentation only. It does not authorize submission, demo publication, browser implementation, account login or game actions. The companion is proposed. Hidden normal play is required by the product, but its compatibility with Chess.com requirements is unconfirmed.
+Await Chess.com's eligibility/access review, especially permission for a hidden companion during ordinary terminal play. Submission is not approval, OAuth credentials or working live integration. Do not resubmit this completed request merely because an older preparation draft had placeholders.
