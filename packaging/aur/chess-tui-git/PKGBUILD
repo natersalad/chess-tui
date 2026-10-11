@@ -1,0 +1,51 @@
+# Maintainer: natersalad (https://github.com/natersalad)
+# Public maintainer email must be selected before AUR publication.
+pkgname=chess-tui-git
+pkgver=0.1.0.r36.gb716261
+pkgrel=1
+pkgdesc='Mouse-driven graphical terminal chess with offline play (Chess.com access pending)'
+arch=('x86_64')
+url='https://github.com/natersalad/chess-tui'
+license=('MIT' 'CC0-1.0')
+depends=('nodejs>=22' 'glibc' 'gcc-libs')
+makedepends=('git' 'npm')
+optdepends=('ghostty: tested terminal with Kitty graphics and mouse reporting'
+            'libpulse: placement and game-event sound playback'
+            'xdg-utils: open access-request help links')
+provides=('chess-tui')
+conflicts=('chess-tui')
+source=('chess-tui::git+https://github.com/natersalad/chess-tui.git')
+sha256sums=('SKIP')
+
+pkgver() {
+  cd "$srcdir/chess-tui"
+  printf '0.1.0.r%s.g%s' "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+prepare() {
+  cd "$srcdir/chess-tui"
+  npm ci --omit=dev --ignore-scripts --no-audit --no-fund --cache "$srcdir/npm-cache"
+}
+
+check() {
+  cd "$srcdir/chess-tui"
+  npm run check
+  node --test test/core.test.mjs test/connection.test.mjs test/frame.test.mjs \
+    test/graphics.test.mjs test/linux-buttons.test.mjs test/pointer.test.mjs \
+    test/sounds.test.mjs test/bridge.test.mjs
+}
+
+package() {
+  cd "$srcdir/chess-tui"
+  install -d "$pkgdir/usr/lib/chess-tui" "$pkgdir/usr/bin"
+  cp -r bin src assets node_modules "$pkgdir/usr/lib/chess-tui/"
+  install -m644 package.json "$pkgdir/usr/lib/chess-tui/package.json"
+  install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
+  install -Dm644 assets/ATTRIBUTION.md "$pkgdir/usr/share/licenses/$pkgname/ATTRIBUTION.md"
+  install -Dm644 README.md "$pkgdir/usr/share/doc/$pkgname/README.md"
+  chmod 755 "$pkgdir/usr/lib/chess-tui/bin/chess.mjs"
+  ln -s /usr/lib/chess-tui/bin/chess.mjs "$pkgdir/usr/bin/chess-tui"
+  ln -s /usr/lib/chess-tui/bin/chess.mjs "$pkgdir/usr/bin/chess"
+  # npm's local metadata is unnecessary at runtime and must not retain build paths.
+  rm -f "$pkgdir/usr/lib/chess-tui/node_modules/.package-lock.json"
+}

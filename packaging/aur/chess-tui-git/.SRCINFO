@@ -1,0 +1,22 @@
+pkgbase = chess-tui-git
+	pkgdesc = Mouse-driven graphical terminal chess with offline play (Chess.com access pending)
+	pkgver = 0.1.0.r36.gb716261
+	pkgrel = 1
+	url = https://github.com/natersalad/chess-tui
+	arch = x86_64
+	license = MIT
+	license = CC0-1.0
+	makedepends = git
+	makedepends = npm
+	depends = nodejs>=22
+	depends = glibc
+	depends = gcc-libs
+	optdepends = ghostty: tested terminal with Kitty graphics and mouse reporting
+	optdepends = libpulse: placement and game-event sound playback
+	optdepends = xdg-utils: open access-request help links
+	provides = chess-tui
+	conflicts = chess-tui
+	source = chess-tui::git+https://github.com/natersalad/chess-tui.git
+	sha256sums = SKIP
+
+pkgname = chess-tui-git

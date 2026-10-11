@@ -68,3 +68,7 @@ Chess uses slim explicit side margins and more vertical breathing room. It prese
 ## License
 
 Code and original artwork are licensed under [MIT](LICENSE). Bundled wooden sound recordings retain their CC0 terms and attribution in [assets/ATTRIBUTION.md](assets/ATTRIBUTION.md); dependencies retain their respective licenses. Locally downloaded Chess.com sounds are not distributed. Reference screenshots are documentation only and are not included in the Arch package.
+
+## Arch Linux / AUR preparation
+
+A tested [`chess-tui-git` PKGBUILD](packaging/aur/chess-tui-git/PKGBUILD) and `.SRCINFO` are prepared. **The package is not published in AUR yet**; maintainer contact and AUR SSH authentication still need setup. See [packaging notes](packaging/aur/README.md).
