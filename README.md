@@ -1,6 +1,6 @@
 # Chess TUI
 
-A working mouse-driven chess TUI for Nathan, with read-only Noctalia colors, local two-player play, a weak offline practice bot, and an experimental Chess.com browser bridge. Private project.
+A working mouse-driven chess TUI for Nathan, with read-only Noctalia colors, local two-player play, a weak offline practice bot, and an approval-gated Chess.com integration. Online access is not approved or connected; the old bridge is retained only for fixture research.
 
 ## Launch
 

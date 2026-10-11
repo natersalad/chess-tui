@@ -31,7 +31,7 @@ My required UX is for launching the terminal app to automatically start an app-o
 
 There is no engine analysis, move recommendation, or automatic game-play in online mode. The local practice opponent is separate from online play. Account consent, matchmaking and other game actions would remain deliberate, and the implementation would use only your documented protocol and granted permissions. I would appreciate the relevant SDK/protocol documentation, registration prerequisites, supported native authentication flow, allowed game types, and a recommended test procedure.
 
-The code repository remains private. A redacted visual demo can be provided with the project owner's approval; I am not requesting access using someone else's board credentials. The demo will use original piece artwork and custom colors, with no third-party audio. Please advise on any additional review or compliance requirements before live implementation.
+The code repository is public with the project owner's approval. An approved offline gameplay demonstration can be provided; I am not requesting access using someone else's board credentials. The demo will use original piece artwork and custom colors, with no third-party audio. Please advise on any additional review or compliance requirements before live implementation.
 
 ## Demonstration prepared for approval
 

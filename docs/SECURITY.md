@@ -6,7 +6,7 @@ Production uses `PendingApprovalConnection` and sends no live operations. The im
 
 The server binds only `127.0.0.1:17391`, requires a random 256-bit pairing secret, rejects unexpected browser origins, limits payloads to 16 KiB, and validates snapshots. The original extension has storage permission, a Chess.com host scope, and the local loopback host scope. It neither downloads scripts nor accepts arbitrary code to execute.
 
-Account cookies, credentials, and profiles stay in the browser. No remote analytics or relay is used. Scratch work, local profiles, secrets, logs, dependencies and build directories are ignored by Git. The repository is private; privacy still requires keeping the token out of screenshots and commits.
+Account cookies, credentials, and profiles stay in the browser. No remote analytics or relay is used. Scratch work, local profiles, secrets, logs, dependencies and build directories are ignored by Git. The repository is public; tokens, browser/account details and private local data must stay out of screenshots and commits.
 
 Commands are allowlisted. One request is in flight at a time; request IDs are deduplicated on the page. Moves require a legal local move, an owned active game, the user's turn, and matching browser game identity/revision. Acknowledgement of a move requires a subsequent position change. Disconnect/stale state disables submissions. Timed-out commands are not replayed on reconnect. A timeout can still mean the action happened: reconcile in the browser before retrying.
 
