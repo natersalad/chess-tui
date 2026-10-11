@@ -1,6 +1,6 @@
 import {Chess} from 'chess.js';
 import {LocalGame,controls,practiceMove} from './game.mjs';
-import {squareAt,squareCenter} from './input.mjs';
+import {squareAt,squareCenter,squarePixelCenter} from './input.mjs';
 import {render} from './render.mjs';
 import {loadTheme} from './theme.mjs';
 import {spawn} from 'node:child_process';
@@ -56,9 +56,9 @@ export class App {
  toggleArrow(from,to){const a=this.arrows.find(a=>a.from===from&&a.to===to);this.arrows=a?this.arrows.filter(x=>x!==a):[...this.arrows,{from,to}];}
  async animateMove(from,to,origin){
   if(!this.geometry||!this.graphics||this.textFallback)return;
-  const g=this.geometry,start=origin?.moved?{x:origin.x,y:origin.y}:squareCenter(from,g,this.flip),end=squareCenter(to,g,this.flip),began=Date.now();
+  const g=this.geometry,start=origin?.moved?{x:origin.x,y:origin.y,pixelX:origin.pixelX??(origin.x-1+.5)*g.cell.w,pixelY:origin.pixelY??(origin.y-1+.5)*g.cell.h}:{...squareCenter(from,g,this.flip),...squarePixelCenter(from,g,this.flip)},end={...squareCenter(to,g,this.flip),...squarePixelCenter(to,g,this.flip)},began=Date.now();
   this.moveAnimation={from,moved:true,...start};this.changed();
-  while(!this.closed){const t=Math.min(1,(Date.now()-began)/110),ease=1-(1-t)**3;this.moveAnimation={from,moved:true,x:start.x+(end.x-start.x)*ease,y:start.y+(end.y-start.y)*ease};(this.dragChanged||this.changed)();if(t===1)break;await new Promise(r=>setTimeout(r,16));}
+  while(!this.closed){const t=Math.min(1,(Date.now()-began)/110),ease=1-(1-t)**3;this.moveAnimation={from,moved:true,x:start.x+(end.x-start.x)*ease,y:start.y+(end.y-start.y)*ease,pixelX:start.pixelX+(end.pixelX-start.pixelX)*ease,pixelY:start.pixelY+(end.pixelY-start.pixelY)*ease};await (this.dragChanged||this.changed)();if(t===1)break;await new Promise(r=>setTimeout(r,16));}
   this.moveAnimation=null;
  }
  async move(from,to,promotion='q',origin){

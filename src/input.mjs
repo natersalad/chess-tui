@@ -23,4 +23,6 @@ export class InputParser {
 export function squareAt(x,y,g,flip=false){const c=Math.floor((x-g.x)/g.sw),r=Math.floor((y-g.y)/g.sh);if(c<0||c>7||r<0||r>7)return null;return String.fromCharCode(97+(flip?7-c:c))+(flip?r+1:8-r);}
 export function squareCenter(s,g,flip=false){const f=s.charCodeAt(0)-97,r=8-Number(s[1]);return {x:g.x+(flip?7-f:f)*g.sw+Math.floor(g.sw/2),y:g.y+(flip?7-r:r)*g.sh+Math.floor(g.sh/2)};}
 
+export function squarePixelCenter(s,g,flip=false){const f=s.charCodeAt(0)-97,r=8-Number(s[1]);return {pixelX:(g.x-1+((flip?7-f:f)+.5)*g.sw)*g.cell.w,pixelY:(g.y-1+((flip?7-r:r)+.5)*g.sh)*g.cell.h};}
+
 export function pixelMouseEvent(e,cell){return {...e,pixelX:e.x-1,pixelY:e.y-1,x:1+(e.x-1)/cell.w,y:1+(e.y-1)/cell.h};}
