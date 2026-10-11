@@ -2,6 +2,12 @@
 
 A working mouse-driven chess TUI for Nathan, with read-only Noctalia colors, local two-player play, a weak offline practice bot, and an approval-gated Chess.com integration. Online access is not approved or connected; the old bridge is retained only for fixture research.
 
+## Offline gameplay demo
+
+[![Full-board offline gameplay demo](docs/runtime/offline-demo-thumbnail.jpg)](https://github.com/natersalad/chess-tui/releases/download/offline-demo-v1/chess-tui-demo-v2.mp4)
+
+[Watch or download the 37.5-second silent video](https://github.com/natersalad/chess-tui/releases/download/offline-demo-v1/chess-tui-demo-v2.mp4), or view the [demo release](https://github.com/natersalad/chess-tui/releases/tag/offline-demo-v1). This shows the offline prototype. The Chess.com access request has been submitted; live integration is not approved or connected. The video is hosted as a release asset rather than duplicated in Git history.
+
 ## Launch
 
 ```sh
@@ -30,7 +36,7 @@ The optional `--window` launcher disables titlebar/tab chrome with per-process o
 
 **Live play is not connected.** Production now uses an approval-required provider and does not start the undocumented page-method bridge. The public API cannot submit moves. Review [supported integration design](docs/CHESSCOM-ACCESS.md) and [application packet](docs/CHESSCOM-APPLICATION.md). The official request form requires an interactive WebView plus a WebSocket server for the connected-board route; this terminal has no embedded browser yet, and software-only eligibility is unconfirmed.
 
-`chess --setup` prints the supported request route. The original extension and bridge remain fixture-only research files; do not use them as a supported live-play setup. Local play, original graphics, Noctalia colors, mouse controls and window dimensions remain unchanged. No engine advice is available online. No application, account consent or real game action has been submitted.
+`chess --setup` prints the supported request route. The original extension and bridge remain fixture-only research files; do not use them as a supported live-play setup. Local play, original graphics, Noctalia colors, mouse controls and window dimensions remain unchanged. No engine advice is available online. The integration access request has been submitted and awaits review. No live-game action has been submitted.
 
 ## Development
 
