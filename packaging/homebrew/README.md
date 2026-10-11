@@ -30,7 +30,7 @@ For a failure, share the failing command and error, `brew --version`, `node --ve
 
 ## Source, dependencies and verification
 
-The formula pins upstream revision `25a54192521f0125648301f60cc26d1c8bee1afe`, matching package version 0.1.0, and checks the archive SHA-256. This is an immutable source snapshot; the only existing release tag is a demo, not a stable software release. A proper versioned release and platform CI are needed before proposing homebrew-core inclusion.
+The formula pins upstream revision `e137f292782ec4552e14371f7d25b5ed1c67bf26`, matching package version 0.1.0, and checks the archive SHA-256. This is an immutable source snapshot; the only existing release tag is a demo, not a stable software release. A proper versioned release and platform CI are needed before proposing homebrew-core inclusion.
 
 Node is the runtime dependency. The current Homebrew `fetch` phase downloads the lockfile's production npm dependencies into a build-local cache; `install` repeats `npm ci` offline with lifecycle scripts disabled. Runtime files and platform-appropriate sharp binaries are installed under libexec. No dev browser dependencies, source screenshots, GIF/MP4, work directory or locally downloaded Chess.com audio are installed. Original code/artwork use MIT and bundled recordings retain CC0 attribution; dependencies retain their own licenses. No bottles have been built.
 
@@ -74,3 +74,7 @@ chess-tui
 ```
 
 Compare normal click moves and drag/drop against the previous version. Report whether the full board still flashes; tests verify protocol sequences, not perceived flicker.
+
+## Accepted animation endpoint update (revision 2)
+
+Nathan played the endpoint fix on Linux and reported that it looks better, accepting it for Mac distribution while parking further animation polish. The source now includes exact board-pixel animation centers, preservation of the drag pixel origin, and an awaited final sprite placement before settling. Syntax and 40 focused tests passed before acceptance. Homebrew revision 2 packages that accepted source as `0.1.0_2`; deployment and visual acceptance on Mac remain separate checks. No Mac upgrade was performed by this packaging step.
